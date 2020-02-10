@@ -1,8 +1,10 @@
 from django.urls import path
-from .views import UsersAPIView, UsersRudView, SelfUserRudView
+from .views import UsersAPIView, UsersRudView, SelfUserRudView, Logout
 
 urlpatterns = [
     path('api/users', UsersAPIView.as_view(), name='users-listcreate'),
 	path('api/users/<int:pk>', UsersRudView.as_view(), name='users-rud'),
-	path('api/users/self', SelfUserRudView.as_view(), name='self-user-rud')
+	path('api/users/self', SelfUserRudView.as_view(), name='self-user-rud'),
+
+	path('api/logout/', Logout.as_view()),
 ]

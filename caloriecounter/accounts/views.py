@@ -1,5 +1,8 @@
 from django.shortcuts import render
 from rest_framework import generics, mixins
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from .serializers import UserSerializer, UserUpdateSerializer
 from .models import User, Profile
 from accounts.permissions import IsAdmin, IsAdminOrManager
@@ -29,3 +32,9 @@ class SelfUserRudView(generics.RetrieveUpdateDestroyAPIView):
 	def get_queryset(self):
 		return User.objects.get(user=self.request.user)
 
+
+class Logout(APIView):
+    def post(self, request, format=None):
+        # delete the token to force a logout
+        request.user.auth_token.delete()
+        return Response(status=status.HTTP_200_OK)
