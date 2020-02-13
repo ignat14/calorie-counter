@@ -1,12 +1,23 @@
 <template>
   <div id="app">
-    <!-- <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div> -->
-    <router-view/>
+    <HeaderMain v-if="$route.path !== '/login'" />
+    <SideMenu v-if="$route.path !== '/login'" />
+    <router-view class="main-view" />
   </div>
 </template>
+
+<script>
+import HeaderMain from '@/components/HeaderMain.vue';
+import SideMenu from '@/components/SideMenu.vue';
+
+export default {
+	name: 'MyMealsList',
+	components: {
+		HeaderMain,
+		SideMenu
+  }
+}
+</script>
 
 <style>
 #app {
@@ -16,18 +27,13 @@
   text-align: center;
   color: #2c3e50;
   box-sizing: border-box;
+  --main-blue: rgb(35, 92, 197);
 }
 
-#nav {
-  padding: 30px;
+.main-view {
+  margin-top: 120px;
+  margin-left: 80px;
+  margin-right: 80px;
 }
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
 </style>

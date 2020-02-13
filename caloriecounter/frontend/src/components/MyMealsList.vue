@@ -16,7 +16,7 @@
 			</div>
 
 			<div v-for="meal in my_meals" :key="meal.id">
-				<Meal :meal="meal" @deleteMeal="deleteMeal"/>
+				<DiaryMeal :meal="meal" @deleteMeal="deleteMeal"/>
 			</div>
 			<AddMeal :current_date="current_date" @addNewMeal="addNewMeal"/>
 		</div>
@@ -26,7 +26,7 @@
 
 <script>
 import MyMealsAPI from '@/services/api/my_meals.js';
-import Meal from '@/components/Meal.vue';
+import DiaryMeal from '@/components/DiaryMeal.vue';
 import DiaryDaySelect from '@/components/DiaryDaySelect.vue';
 import AddMeal from '@/components/AddMeal.vue';
 import { mapGetters } from "vuex";
@@ -35,7 +35,7 @@ export default {
 	name: 'MyMealsList',
 	components: {
 		DiaryDaySelect,
-		Meal,
+		DiaryMeal,
 		AddMeal
 	},
 	data() {
@@ -70,11 +70,7 @@ export default {
 		},
 		deleteMeal: function(meal_id) {
 			for (let i = 0; i < this.my_meals.length; i++) {
-				console.log(i, "...");
-				
 				if (this.my_meals[i].id === meal_id) {
-					console.log("FOUND...");
-					
 					this.my_meals.splice(i, 1);
 					break
 				}

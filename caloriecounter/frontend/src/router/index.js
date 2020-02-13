@@ -1,28 +1,35 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Home from '../views/Home.vue';
+import Diary from '../views/Diary.vue';
 import store from '@/store/index.js';
 
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
-    name: 'Home',
-    component: Home
-  },
-  {
     path: '/login',
     name: 'Login',
     component: () => import('../views/Login.vue')
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    path: '/',
+    name: 'Diary',
+    component: Diary
+  },
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: () => import('../views/Settings.vue')
+  },
+  {
+    path: '/manage_users',
+    name: 'ManageUsers',
+    component: () => import('../views/ManageUsers.vue')
+  },
+  {
+    path: '/manage_meals',
+    name: 'ManageMeals',
+    component: () => import('../views/ManageMeals.vue')
   }
 ]
 
@@ -41,7 +48,6 @@ router.beforeEach(async (to, from, next) => {
   await store.dispatch('fetchUser');
 
   const logged_user = store.getters.logged_user;
-  
   if (logged_user.email) {
     next();
   }

@@ -3,7 +3,7 @@ from rest_framework import generics, mixins
 from .serializers import MyMealsSerializer, AllMealsSerializer
 from .models import Meal
 from accounts.permissions import IsAdmin, IsAdminOrManager
-from .utils import filter_datetime
+from .utils import filter_meals
 
 import datetime
 
@@ -14,7 +14,7 @@ class MyMealsAPIView(mixins.CreateModelMixin, generics.ListAPIView):
 	def get_queryset(self):
 		qs = Meal.objects.filter(user=self.request.user)
 		params = self.request.GET
-		qs = filter_datetime(params, qs)
+		qs = filter_meals(params, qs)
 		return qs
 
 	def perform_create(self, serializer):
@@ -42,7 +42,7 @@ class AllMealsAPIView(mixins.CreateModelMixin, generics.ListAPIView):
 	def get_queryset(self):
 		qs = Meal.objects.all()
 		params = self.request.GET
-		qs = filter_datetime(params, qs)
+		qs = filter_meals(params, qs)
 		return qs
 
 	def post(self, request, *args, **kwargs):

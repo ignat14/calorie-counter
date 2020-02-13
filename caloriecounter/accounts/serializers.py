@@ -6,7 +6,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Profile
-		fields = ['expected_calories_per_day']
+		fields = ['user_id', 'expected_calories_per_day']
 
 
 class UserSerializer(serializers.ModelSerializer):

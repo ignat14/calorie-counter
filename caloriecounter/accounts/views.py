@@ -3,7 +3,7 @@ from rest_framework import generics, mixins
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import UserSerializer, UserUpdateSerializer
+from .serializers import UserSerializer, UserUpdateSerializer, ProfileSerializer
 from .models import User, Profile
 from accounts.permissions import IsAdmin, IsAdminOrManager
 
@@ -31,6 +31,15 @@ class SelfUserRudView(generics.RetrieveUpdateDestroyAPIView):
 		
 	def get_queryset(self):
 		return User.objects.get(user=self.request.user)
+
+
+class ProfileRudView(generics.RetrieveUpdateAPIView):
+	serializer_class = ProfileSerializer
+
+	def get_object(self):
+		return Profile.objects.get(user_id=self.kwargs.get('pk'))
+	
+
 
 
 class Logout(APIView):

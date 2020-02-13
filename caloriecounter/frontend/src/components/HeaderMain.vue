@@ -46,6 +46,12 @@ export default {
   display: flex;
   justify-content: space-between;
   border-bottom: 1px gray solid;
+  background: #fff;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 50;
 }
 
 .header-main h1 {
@@ -83,7 +89,7 @@ export default {
 }
 
 .dropdown-item:hover {
-  background: gray;
+  background: var(--main-blue);
   color: white;
 }
 

@@ -2,9 +2,14 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import authAPI from '@/services/api/auth.js';
 
+import all_meals from './modules/all_meals.js';
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({
+  modules: {
+    all_meals
+  },
   state: {
     logged_user: {}
   },
@@ -27,7 +32,5 @@ export default new Vuex.Store({
   mutations: {
     fetchUser: (state, logged_user) => state.logged_user = logged_user,
     clearUser: (state) => state.logged_user = {},
-  },
-  modules: {
   }
 })

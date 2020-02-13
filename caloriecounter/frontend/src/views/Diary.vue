@@ -1,19 +1,15 @@
 <template>
   <div class="home">
-    <HeaderMain/>
-    <MyMealsList/>
+    <MyMealsList />
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HeaderMain from '@/components/HeaderMain.vue';
 import MyMealsList from '@/components/MyMealsList.vue';
 
 export default {
-  name: 'Home',
+  name: 'Diary',
   components: {
-    HeaderMain,
     MyMealsList
   }
 }
