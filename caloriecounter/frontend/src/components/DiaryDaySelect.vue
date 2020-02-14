@@ -3,14 +3,15 @@
 		<div class="diary-day-select">
 			<i class="fas fa-chevron-left" @click="go_left()"/>
 			<VueCtkDateTimePicker v-model="current_date"
+												:no-value-to-custom-elem="true"
 												class="diary-day-picker"
 												:only-date="true"
 												format="YYYY-MM-DD"
 												formatted="ll"
-												@validate="test"
-												@is-hidden="test"
+												@validate="changeDate"
+												@is-hidden="changeDate"
 			>
-				<span class="diary-day-picker-title">today</span>
+				<input class="diary-day-picker-title" v-model="formatted_date">
 			</VueCtkDateTimePicker>
 			<i class="fas fa-chevron-right" @click="go_right()"/>
 		</div>
@@ -28,8 +29,33 @@ export default {
 			current_date: this.value
 		};
 	},
+	computed: {
+		formatted_date: function() {
+			let today = new Date();
+			const today_str = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+			const tomorrow_str = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+(today.getDate()+1);
+			const yesterday_str = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+(today.getDate()-1);
+			console.log(today_str);
+			
+			if (this.current_date == today_str) {
+				return "Today";
+			}
+			else if (this.current_date == tomorrow_str) {
+				return "Tomorrow";
+			}
+			else if (this.current_date == yesterday_str) {
+				return "Yesterday";
+			}
+			
+			let current_date = new Date(this.current_date).toDateString();
+			let date_elems = current_date.split(" ").slice(1);
+			let f_date = date_elems.join(' ');
+			
+			return f_date;
+		}
+	},
 	methods: {
-		test: function() {
+		changeDate: function() {
 			this.$emit('input', this.current_date);
 		},
 		go_left: function() {
@@ -37,12 +63,14 @@ export default {
 			let yesterday = date.getDate() - 1
 			this.current_date = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+yesterday;
 			console.log(this.current_date);
+			this.$emit('input', this.current_date);
 		},
 		go_right: function() {
 			let date = new Date(this.current_date);		
 			let yesterday = date.getDate() + 1
 			this.current_date = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+yesterday;
 			console.log(this.current_date);
+			this.$emit('input', this.current_date);
 		},
 	},
 	created() {
@@ -59,8 +87,6 @@ export default {
 	justify-content: center;
 	align-items: center;
 	font-size: 20px;
-	margin: 30px;
-	margin-top: 50px;
 }
 
 .diary-day-picker {
@@ -72,6 +98,10 @@ export default {
 
 .diary-day-picker-title {
 	font-size: 30px;
+	width: 180px;
+	background: none;
+	border: none;
+	text-align: center;
 	cursor: pointer;
 }
 

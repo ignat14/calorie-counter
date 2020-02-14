@@ -51,7 +51,7 @@ export default {
 	top: 0;
 	background: var(--main-blue);
 	height: 100vh;
-	z-index: 2;
+	z-index: 5;
 }
 
 .closed {

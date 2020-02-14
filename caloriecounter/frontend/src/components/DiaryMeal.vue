@@ -1,17 +1,18 @@
 <template>
 	<div class="meal-box">
 		
-		<VueCtkDateTimePicker v-model="meal.time"
-													class="time-picker"
-													:only-time="true"
-													format="HH:mm:ss"
-													formatted="hh:mm a"
-													:minuteInterval="10"
-													@validate="patchMeal({'time': meal.time})"
-													@is-hidden="patchMeal({'time': meal.time})"
-		>
-			<input class="meal-input time-input" type="text" readonly>
-		</VueCtkDateTimePicker>
+		<span>
+			<VueCtkDateTimePicker v-model="meal.time"
+														:only-time="true"
+														format="HH:mm:ss"
+														formatted="hh:mm a"
+														:minuteInterval="10"
+														@validate="patchMeal({'time': meal.time})"
+														@is-hidden="patchMeal({'time': meal.time})"
+			>
+				<input class="meal-input time-input" type="text" readonly>
+			</VueCtkDateTimePicker>
+		</span>
 		<input type="text" 
 						class="meal-input" 
 						v-model="meal.description" 
@@ -60,8 +61,10 @@ export default {
 
 <style>
 
-.time-picker {
-	display: inline;
+.meal-box {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .meal-input {

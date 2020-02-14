@@ -1,6 +1,8 @@
 <template>
 	<div class="settings-main">
-		<h1>Settings</h1>
+		<div class="main-settings-menu">
+			<h1>Settings</h1>
+		</div>
 		<div class="settings-list">
 			<div class="settings-item">
 				<label for="expected_calories">Expected Calories Per Day</label>

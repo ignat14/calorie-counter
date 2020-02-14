@@ -5,6 +5,7 @@
 			<VueCtkDateTimePicker v-model="meal.date"
 														class="date-picker-input"
 														:only-date="true"
+														label="Select Date"
 														format="YYYY-MM-DD"
 														formatted="ll"
 			></VueCtkDateTimePicker>
@@ -13,6 +14,7 @@
 			<VueCtkDateTimePicker v-model="meal.time"
 														class="time-picker-input"
 														:only-time="true"
+														label="Select Time"
 														format="HH:mm:ss"
 														formatted="hh:mm a"
 														:minuteInterval="10"

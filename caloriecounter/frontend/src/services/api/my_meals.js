@@ -1,8 +1,10 @@
 import axios from 'axios';
 
 export default {
-	async getMyMeals() {
-		let response = await axios.get('http://localhost:8000/api/my_meals');
+	async getMyMeals(params=null) {
+		console.log(params);
+		
+		let response = await axios.get('http://localhost:8000/api/my_meals', {params});
 		return response;
 	},
 

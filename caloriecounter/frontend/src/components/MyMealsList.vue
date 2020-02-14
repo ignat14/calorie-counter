@@ -2,17 +2,19 @@
 	<div class="my-meals-wrapper">
 
 		<div class="meals-list">
-			<DiaryDaySelect v-model="current_date"/>
+			<div class="main-settings-menu">
+				<DiaryDaySelect v-model="current_date"/>
 
-			<div class="count-calories">
-				<h1 :class="{'green': calories_balance, 
-										'red': !calories_balance, 
-										'gray': !expected_calories}">
-					{{ all_calories }}<span>Cals</span>
-				</h1>
-				<h4 v-if="expected_calories">
-					/ {{ expected_calories }} Cals
-				</h4>
+				<div class="count-calories">
+					<h1 :class="{'green': calories_balance, 
+											'red': !calories_balance, 
+											'gray': !expected_calories}">
+						{{ all_calories }}<span>Cals</span>
+					</h1>
+					<h4 v-if="expected_calories">
+						/ {{ expected_calories }} Cals
+					</h4>
+				</div>
 			</div>
 
 			<div v-for="meal in my_meals" :key="meal.id">
@@ -41,7 +43,8 @@ export default {
 	data() {
 		return {
 			my_meals: [],
-			current_date: null
+			current_date: null,
+			params: {}
 		};
 	},
 	computed: {
@@ -62,7 +65,7 @@ export default {
 	},
 	methods: {
 		fetchMyMeals: async function() {
-			let response = await MyMealsAPI.getMyMeals();
+			let response = await MyMealsAPI.getMyMeals(this.params);
 			this.my_meals = response.data;
 		},
 		addNewMeal: function(new_meal) {
@@ -77,10 +80,18 @@ export default {
 			}
 		}
 	},
+	watch: {
+		current_date: function() {
+			this.params = {
+				"date_from": this.current_date,
+				"date_to": this.current_date
+			}
+			this.fetchMyMeals();
+		}
+	},
 	created() {
-		this.fetchMyMeals();
 		let today = new Date();
-		this.current_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();		
+		this.current_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
 	}
 }
 </script>

@@ -31,9 +31,20 @@ export default {
 }
 
 .main-view {
-  margin-top: 120px;
-  margin-left: 80px;
-  margin-right: 80px;
+  margin-top: 60px;
+}
+
+.main-settings-menu {
+	background: #eee;
+	position: sticky;
+	left: 0;
+	top: 60px;
+	width: 100vw;
+  padding-top: 10px;
+	padding-bottom: 20px;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 20px;
+	z-index: 2;
 }
 
 </style>

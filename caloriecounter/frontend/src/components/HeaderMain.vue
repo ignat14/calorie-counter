@@ -48,6 +48,7 @@ export default {
   border-bottom: 1px gray solid;
   background: #fff;
   position: fixed;
+  padding-bottom: 1px;
   top: 0;
   left: 0;
   width: 100%;
@@ -86,6 +87,7 @@ export default {
 .dropdown-item {
   padding: 10px;
   border: 1px gray solid;
+  background: white;
 }
 
 .dropdown-item:hover {

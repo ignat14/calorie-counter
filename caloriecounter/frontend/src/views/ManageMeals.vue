@@ -1,8 +1,16 @@
 <template>
-	<div>
-		<h1>Manage Meals</h1>
-		<ManageMealsFilters />
-		<hr />
+	<div class="manage-meals">
+		<div class="main-settings-menu">
+			<h1>Manage Meals
+				<span class="main-buttons">
+					<i class="fas fa-sliders-h" @click="show_filters = !show_filters"></i>
+					<i class="far fa-plus-square" @click="show_add_new =true"></i>
+				</span>
+			</h1>
+
+			<ManageMealsFilters v-if="show_filters"/>
+		</div>
+
 		<AllMealsList />
 	</div>
 </template>
@@ -18,6 +26,12 @@ export default {
 		ManageMealsFilters,
 		AllMealsList
 	},
+	data() {
+		return {
+			show_filters: true,
+			show_add_new: false
+		}
+	},
 	methods: {
 		...mapActions(['fetchAllMeals'])
 	},
@@ -29,11 +43,25 @@ export default {
 
 <style scoped>
 
-hr {
-	width: 80%;
-	margin: auto;
-	margin-top: 20px;
-	margin-bottom: 20px;
+.manage-meals {
+	position: relative;
+}
+
+.main-buttons {
+	position: absolute;
+	top: 0;
+	right: 0;
+	transform: translateX(-100%);
+	padding: 0 10px;
+}
+
+h1 i {
+	padding: 5px;
+	cursor: pointer;
+}
+
+h1 i:hover {
+	color: var(--main-blue);
 }
 
 </style>

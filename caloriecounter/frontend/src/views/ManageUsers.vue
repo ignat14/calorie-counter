@@ -1,6 +1,10 @@
 <template>
 	<div>
-		<h1>Manage Users</h1>
+		<div class="main-settings-menu">
+			<h1>Manage Users
+				<i class="far fa-plus-square"></i>
+			</h1>
+		</div>
 		<UsersList />
 	</div>
 </template>

@@ -1,24 +1,27 @@
 <template>
 	<div class="add-meal">
-		<VueCtkDateTimePicker v-model="new_meal.time"
-													class="time-picker"
-													:only-time="true"
-													format="HH:mm:ss"
-													formatted="hh:mm a"
-													:minuteInterval="10"
-		>
-			<input v-model="new_meal.time" class="meal-input time-input" type="text" placeholder="Add time" readonly>
-		</VueCtkDateTimePicker>
-		<input type="text" 
-						class="meal-input" 
-						v-model="new_meal.description"
-						placeholder="Add description">
-		<input type="number" 
-						class="meal-input" 
-						v-model.number="new_meal.calories" 
-						placeholder="Add Calories">
+		<div class="meal-box">
+			<div>
+				<VueCtkDateTimePicker v-model="new_meal.time"
+															:only-time="true"
+															format="HH:mm:ss"
+															formatted="hh:mm a"
+															:minuteInterval="10"
+				>
+					<input v-model="new_meal.time" class="meal-input time-input" type="text" placeholder="Add time" readonly>
+				</VueCtkDateTimePicker>
+			</div>
+			<input type="text" 
+							class="meal-input" 
+							v-model="new_meal.description"
+							placeholder="Add description">
+			<input type="number" 
+							class="meal-input" 
+							v-model.number="new_meal.calories" 
+							placeholder="Add Calories">
 
-		<i class="fas fa-check add-icon" @click="addMeal"></i>
+			<i class="fas fa-check add-icon" @click="addMeal"></i>
+		</div>
 	</div>
 </template>
 
