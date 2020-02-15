@@ -6,10 +6,22 @@
 			<i class="fas fa-times exit-modal" @click="toggleAddUserModal(false)"></i>
 
 			<div class="modal-form">
+
 				<div class="modal-form-item">
 					<label for="email">Email</label>
 					<input type="email">
 				</div>
+
+				<div class="modal-form-item">
+					<label for="password">Password</label>
+					<input type="password">
+				</div>
+
+				<div class="modal-form-item">
+					<label for="password">Repeat Password</label>
+					<input type="password">
+				</div>
+
 				<div class="modal-form-item">
 					<label for="email">Permission</label>
 					<select v-model="all_users">
@@ -18,6 +30,7 @@
 						<option>ADMIN</option>
 					</select>
 				</div>
+
 				<button>Add User</button>
 			</div>
 

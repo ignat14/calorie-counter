@@ -3,7 +3,7 @@
 		<form id="login-form" @submit="login">
 
 			<h1>Calorie Counter</h1>
-			<h2>Log In</h2>
+			<h2>Sign Up</h2>
 
 			<div class="textbox">
 				<input type="text"
@@ -15,23 +15,34 @@
 			</div>
 			<div class="textbox">
 				<input type="password"
-								v-model="password"
-								:class="{'focus': password || password_focused}"
-								@focus="password_focused = true"
-								@blur="password_focused = false">
+								v-model="password1"
+								:class="{'focus': password1 || password1_focused}"
+								@focus="password1_focused = true"
+								@blur="password1_focused = false">
 				<span data-placeholder="Password"></span>
+			</div>
+			<div class="textbox">
+				<input type="password"
+								v-model="password2"
+								:class="{'focus': password2 || password2_focused}"
+								@focus="password2_focused = true"
+								@blur="password2_focused = false">
+				<span data-placeholder="Repeat Password"></span>
 			</div>
 
 			<div class="error-message">
 				{{ error_message }}
 			</div>
+			<div class="success-message">
+				{{ success_message }}
+			</div>
 
 			<div class="login-btn-div">
-				<input type="submit" value="Log In">
+				<input type="submit" value="Sign Up">
 			</div>
 
 			<div class="bottom-line">
-				<span>Don't have an account?</span> <router-link to="/signup">Sign Up</router-link>
+				<span>Already have an account?</span> <router-link to="/login">Log In</router-link>
 			</div>
 
 		</form>
@@ -39,8 +50,8 @@
 </template>
 
 <script>
-import axios from 'axios';
 import { mapActions } from "vuex";
+import AuthApi from '@/services/api/auth.js';
 // import router from '@/router/index.js';
 
 export default {
@@ -48,32 +59,34 @@ export default {
 	data() {
 		return {
 			email: "",
-			password: "",
+			password1: "",
+			password2: "",
 			email_focused: false,
-			password_focused: false,
-			error_message: ""
+			password1_focused: false,
+			password2_focused: false,
+			error_message: "",
+			success_message: ""
 		};
 	},
 	methods: {
 		...mapActions(['fetchUser']),
 		login: async function(e) {
 			e.preventDefault();
-			console.log("HERE");
-			
 			let data = {
-        "username": this.email,
-        "password": this.password
+        "email": this.email,
+				"password1": this.password1,
+				"password2": this.password2
 			}
 			try {
-				let response = await axios.post('http://localhost:8000/api-token-auth/', data);
-				localStorage.drf_token = response.data.token;
+				await AuthApi.signUp(data);
+				this.success_message = "Activation Email sent. Please verify before log in";
 				this.error_message = "";
-				await this.fetchUser();
-				this.$router.push('/');
-				console.log(localStorage.getItem("drf_token"));
 			}
 			catch(err) {
-				this.error_message = "Please make sure that the email and password are correct";
+				console.log(err.response.data);
+				
+				this.error_message = "Something went wrong";
+				this.success_message = "";
 			}
 			
 		}
@@ -171,6 +184,10 @@ export default {
 
 .error-message {
 	color: red;
+}
+
+.success-message {
+	color: green;
 }
 
 a {

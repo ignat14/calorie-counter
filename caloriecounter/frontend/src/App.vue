@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <HeaderMain v-if="$route.path !== '/login'" />
-    <SideMenu v-if="$route.path !== '/login'" />
+    <HeaderMain v-if="$route.path !== '/login' && $route.path !== '/signup'" />
+    <SideMenu v-if="$route.path !== '/login' && $route.path !== '/signup'" />
     <SideMenuMobile />
     <AccountMenuMobile />
     <router-view class="main-view" />

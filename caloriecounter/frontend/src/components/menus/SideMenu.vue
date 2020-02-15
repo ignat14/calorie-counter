@@ -10,7 +10,7 @@
 				</div>
 
 				<div class="icons-wrapper">
-					<router-link to="/" class="test">
+					<router-link to="/">
 						<i class="far fa-clipboard menu-icon"></i>
 						<span v-if="is_open">Diary</span>
 					</router-link>
@@ -20,12 +20,12 @@
 						<span v-if="is_open">Settings</span>
 					</router-link>
 					
-					<router-link to="/manage_users">
+					<router-link to="/manage_users" v-if="logged_user.permission != 'USER'">
 						<i class="fas fa-users"></i>
 						<span v-if="is_open">Manage Users</span>
 					</router-link>
 
-					<router-link to="/manage_meals">
+					<router-link to="/manage_meals" v-if="logged_user.permission == 'ADMIN'">
 						<i class="fas fa-drumstick-bite"></i>
 						<span v-if="is_open">Manage Meals</span>
 					</router-link>
@@ -38,6 +38,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 export default {
 	name: "SideMenu",
 	data() {
@@ -45,6 +46,9 @@ export default {
 			is_open: false
 		};
 	},
+	computed: {
+		...mapGetters(['logged_user'])
+	}
 }
 </script>
 

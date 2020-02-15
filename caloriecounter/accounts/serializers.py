@@ -1,6 +1,10 @@
 from rest_framework import serializers
 from .models import User, Profile
-
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from .tokens import account_activation_token
 
 class ProfileSerializer(serializers.ModelSerializer):
 
@@ -34,3 +38,40 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 		model = User
 		fields = ['id', 'email', 'permission', 'profile']
 		read_only_fields = ['id']
+
+
+class SignupUserSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = User
+		fields = ['email', 'permission']
+		read_only_fields = ['password1', 'password2']
+		extra_kwargs = {
+            'permission': {'required': False}
+        }
+
+
+	def create(self, validated_data):
+		permission = 'USER'
+		if 'permission' in validated_data:
+			permission = validated_data['permission']
+		user = User(
+			email=validated_data['email'],
+			permission=permission,
+			is_active=False
+		)
+		user.set_password(self.context.get('password'))
+		user.save()
+
+		mail_subject = "Please Activate your account"
+		message = render_to_string('activate_email.html', {
+			'user': user,
+			'domain': "localhost:8000",
+			'uid':urlsafe_base64_encode(force_bytes(user.pk)),
+			'token':account_activation_token.make_token(user),
+		})
+		to_email = validated_data['email']
+
+		email = EmailMessage(mail_subject, message, to=[to_email])
+		email.send()
+
+		return user
