@@ -11,12 +11,12 @@
 				<span>Settings</span>
 			</router-link>
 			
-			<router-link to="/manage_users" @click.native="toggleLeftMenu(false)">
+			<router-link to="/manage_users" @click.native="toggleLeftMenu(false)" v-if="logged_user.permission != 'USER'">
 				<i class="fas fa-users menu-icon"></i>
 				<span>Manage Users</span>
 			</router-link>
 
-			<router-link to="/manage_meals" @click.native="toggleLeftMenu(false)">
+			<router-link to="/manage_meals" @click.native="toggleLeftMenu(false)" v-if="logged_user.permission == 'ADMIN'">
 				<i class="fas fa-drumstick-bite menu-icon"></i>
 				<span>Manage Meals</span>
 			</router-link>
@@ -31,7 +31,7 @@ import { mapGetters, mapActions } from 'vuex';
 export default {
 	name: "SideMenuMobile",
   computed: {
-		...mapGetters(['left_menu_show']),
+		...mapGetters(['left_menu_show', 'logged_user']),
     is_mobile: function() {
       return this.$mq === 'mobile' || this.$mq === 'tablet'
     }

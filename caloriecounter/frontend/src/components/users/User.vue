@@ -88,4 +88,10 @@ export default {
 	background: rgb(245, 94, 94);
 }
 
+@media (max-width: 420px) {
+	.user-main {
+		margin: 0 100px;
+	}
+}
+
 </style>

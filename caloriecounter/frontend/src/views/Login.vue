@@ -3,7 +3,6 @@
 		<form id="login-form" @submit="login">
 
 			<h1>Calorie Counter</h1>
-			<h2>Log In</h2>
 
 			<div class="textbox">
 				<input type="text"

@@ -9,29 +9,29 @@
 
 				<div class="modal-form-item">
 					<label for="email">Email</label>
-					<input type="email">
+					<input type="email" v-model="email">
 				</div>
 
 				<div class="modal-form-item">
 					<label for="password">Password</label>
-					<input type="password">
+					<input type="password" v-model="password1">
 				</div>
 
 				<div class="modal-form-item">
 					<label for="password">Repeat Password</label>
-					<input type="password">
+					<input type="password" v-model="password2">
 				</div>
 
 				<div class="modal-form-item">
 					<label for="email">Permission</label>
-					<select v-model="all_users">
+					<select v-model="permission">
 						<option>USER</option>
 						<option>MANAGER</option>
 						<option>ADMIN</option>
 					</select>
 				</div>
 
-				<button>Add User</button>
+				<button @click="createUser()">Add User</button>
 			</div>
 
 		</div>
@@ -40,14 +40,36 @@
 </template>
 
 <script>
+import AuthAPI from '@/services/api/auth.js';
 import { mapGetters, mapActions } from 'vuex';
 export default {
 	name: "AddUserModal",
+	data() {
+		return {
+			email: "",
+			password1: "",
+			password2: "",
+			permission: ""
+		}
+	},
 	computed: {
 		...mapGetters(['add_user_modal', 'all_users'])
 	},
 	methods: {
-		...mapActions(['toggleAddUserModal'])
+		...mapActions(['toggleAddUserModal']),
+		createUser: async function() {
+			let data = {
+				"email": this.email,
+				"password1": this.password1,
+				"password2": this.password2,
+			}
+			if (this.permission) {
+				data.permission = this.permission;
+			}
+			let response = await AuthAPI.signUp(data);
+			console.log(response.data);
+			
+		}
 	}
 }
 </script>

@@ -3,7 +3,6 @@
 		<form id="login-form" @submit="login">
 
 			<h1>Calorie Counter</h1>
-			<h2>Sign Up</h2>
 
 			<div class="textbox">
 				<input type="text"
@@ -133,6 +132,7 @@ export default {
 	position: absolute;
 	top: 50%;
 	left: 50%;
+	width: 80%;
 	color: #adadad;
 	transform: translate(-50%, -50%);
 	z-index: -1;

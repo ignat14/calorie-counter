@@ -10,9 +10,9 @@
 				</div>
 
 				<div class="icons-wrapper">
-					<router-link to="/">
+					<router-link to="/" class="diary-btn">
 						<i class="far fa-clipboard menu-icon"></i>
-						<span v-if="is_open">Diary</span>
+						<span v-if="is_open" class="menu-text">Diary</span>
 					</router-link>
 					
 					<router-link to="/settings">
@@ -84,9 +84,14 @@ export default {
 	cursor: pointer;
 }
 
-.icons-wrapper i:hover {
+a:hover i {
 	color: #000;
 }
+
+a:hover span {
+	color: #000;
+}
+
 
 .toggle-btn {
 	display: flex;
@@ -115,7 +120,6 @@ export default {
 }
 
 a {
-	width: 180px;
 	padding: 2px;
 	margin-top: 20px;
 	text-decoration: none;
@@ -123,10 +127,6 @@ a {
 	display: flex;
 	justify-content: flex-start;
 	align-items: center;
-}
-
-a:hover {
-	color: #000;
 }
 
 a i {

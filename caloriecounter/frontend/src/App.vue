@@ -26,6 +26,7 @@ export default {
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css?family=Dancing+Script&display=swap');
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -59,6 +60,10 @@ body {
   font-size: 1.6em;
 }
 
+input {
+	border: 1px solid #aaa;
+}
+
 @media (max-width: 640px) {
   body {
     font-size: 12px;
@@ -73,7 +78,6 @@ body {
 
 
 <style>
-@import url('https://fonts.googleapis.com/css?family=Dancing+Script&display=swap');
 /* GLOABAL MODAL STYLES */
 
 .main-modal {
@@ -82,10 +86,11 @@ body {
 	top: 50%;
 	left: 50%;
 	width: 90%;
+	max-width: 600px;
 	height: 90%;
 	transform: translate(-50%, -50%);
 	border: 1px solid #000;
-	border-radius: 2%;
+	border-radius: 5%;
 	z-index: 20;
 }
 
@@ -177,7 +182,7 @@ body {
 	margin: 0 5px;
 	justify-self: end;
 	align-self: center;
-	padding: 0 30px;
+	padding: 0 10px;
 }
 
 .modal-form-item > input {
