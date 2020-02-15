@@ -4,6 +4,9 @@
 		<div class="meals-list">
 			<div class="main-settings-menu">
 				<DiaryDaySelect v-model="current_date"/>
+				<div class="open-modal-icon filter" @click="toggleFilters()">
+						<i class="fas fa-sliders-h"></i>
+				</div>
 
 				<div class="count-calories">
 					<h1 :class="{'green': calories_balance, 
@@ -28,9 +31,9 @@
 
 <script>
 import MyMealsAPI from '@/services/api/my_meals.js';
-import DiaryMeal from '@/components/DiaryMeal.vue';
-import DiaryDaySelect from '@/components/DiaryDaySelect.vue';
-import AddMeal from '@/components/AddMeal.vue';
+import DiaryMeal from '@/components/my_meals/DiaryMeal.vue';
+import DiaryDaySelect from '@/components/my_meals/DiaryDaySelect.vue';
+import AddMeal from '@/components/my_meals/AddMeal.vue';
 import { mapGetters } from "vuex";
 
 export default {
@@ -78,6 +81,10 @@ export default {
 					break
 				}
 			}
+		},
+		toggleFilters: function() {
+			console.log("Toggle Filters");
+			
 		}
 	},
 	watch: {
@@ -108,22 +115,23 @@ export default {
 
 .count-calories {
 	font-family: 'Dancing Script', cursive;
-	margin-bottom: 20px;
 }
 
 .count-calories h1 {
 	margin: 0;
-	font-size: 50px;
+	font-size: 3em;
+	display: inline;
 }
 .count-calories h1 span{
 	margin: 0;
-	font-size: 30px;
+	font-size: 2rem;
 }
 
 .count-calories h4 {
 	margin: 0;
-	margin-right: -150px;
-	font-size: 20px;
+	font-size: 1rem;
+	display: inline;
+	/* transform: translateX(3em); */
 }
 
 .green {

@@ -8,7 +8,7 @@
 
 <script>
 import UsersAPI from '@/services/api/users.js';
-import User from '@/components/User.vue';
+import User from '@/components/users/User.vue';
 
 export default {
 	name: "UsersList",

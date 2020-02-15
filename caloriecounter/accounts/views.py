@@ -7,6 +7,17 @@ from .serializers import UserSerializer, UserUpdateSerializer, ProfileSerializer
 from .models import User, Profile
 from accounts.permissions import IsAdmin, IsAdminOrManager
 
+# from rest_framework.decorators import api_view
+
+
+# @api_view()
+# def null_view(request):
+#     return Response(status=status.HTTP_400_BAD_REQUEST)
+
+# @api_view()
+# def complete_view(request):
+#     return Response("Email account is activated")
+
 class UsersAPIView(mixins.CreateModelMixin, generics.ListAPIView):
 	queryset = User.objects.all()
 	serializer_class = UserSerializer
@@ -39,8 +50,6 @@ class ProfileRudView(generics.RetrieveUpdateAPIView):
 	def get_object(self):
 		return Profile.objects.get(user_id=self.kwargs.get('pk'))
 	
-
-
 
 class Logout(APIView):
     def post(self, request, format=None):

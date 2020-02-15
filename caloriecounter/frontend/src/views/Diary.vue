@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import MyMealsList from '@/components/MyMealsList.vue';
+import MyMealsList from '@/components/my_meals/MyMealsList.vue';
 
 export default {
   name: 'Diary',

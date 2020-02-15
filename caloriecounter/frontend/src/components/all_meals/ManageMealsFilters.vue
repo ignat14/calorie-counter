@@ -145,7 +145,8 @@ export default {
 .filters-main {
 	display: flex;
 	justify-content: center;
-	margin-top: 50px;
+	margin-top: 35px;
+	margin-bottom: 10px;
 }
 
 .mm-filter {
@@ -162,7 +163,7 @@ export default {
 .mm-filter::after {
 	content: attr(data-label);
 	position: absolute;
-	top: -30px;
+	top: -27px;
 	left: 50%;
 	transform: translateX(-50%);
 	border-bottom: 1px solid #000;
@@ -197,6 +198,15 @@ export default {
 
 input {
 	padding: 5px;
+}
+
+@media (max-width: 1040px) {
+	.mm-filter select {
+		width: 150px;
+	}
+	.mm-filter input {
+		width: 120px;
+	}
 }
 
 </style>

@@ -1,34 +1,38 @@
 <template>
-	<div class="side-menu"
-				:class="{open: is_open, closed: !is_open}">
+	<div>
+		<mq-layout mq="laptop+">
+			<div class="side-menu"
+						:class="{open: is_open, closed: !is_open}">
 
-		<div class="toggle-btn" @click="is_open = !is_open">
-			<i v-if="!is_open" class="fas fa-chevron-right toggle-icon"/>
-			<i v-if="is_open" class="fas fa-chevron-left toggle-icon"/>
-		</div>
+				<div class="toggle-btn" @click="is_open = !is_open">
+					<i v-if="!is_open" class="fas fa-chevron-right toggle-icon"/>
+					<i v-if="is_open" class="fas fa-chevron-left toggle-icon"/>
+				</div>
 
-		<div class="icons-wrapper">
-			<router-link to="/" class="test">
-				<i class="far fa-clipboard menu-icon"></i>
-				<span v-if="is_open">Diary</span>
-			</router-link>
-			
-			<router-link to="/settings">
-				<i class="fas fa-cog menu-icon"></i>
-				<span v-if="is_open">Settings</span>
-			</router-link>
-			
-			<router-link to="/manage_users">
-				<i class="fas fa-users"></i>
-				<span v-if="is_open">Manage Users</span>
-			</router-link>
+				<div class="icons-wrapper">
+					<router-link to="/" class="test">
+						<i class="far fa-clipboard menu-icon"></i>
+						<span v-if="is_open">Diary</span>
+					</router-link>
+					
+					<router-link to="/settings">
+						<i class="fas fa-cog menu-icon"></i>
+						<span v-if="is_open">Settings</span>
+					</router-link>
+					
+					<router-link to="/manage_users">
+						<i class="fas fa-users"></i>
+						<span v-if="is_open">Manage Users</span>
+					</router-link>
 
-			<router-link to="/manage_meals">
-				<i class="fas fa-drumstick-bite"></i>
-				<span v-if="is_open">Manage Meals</span>
-			</router-link>
-			
-		</div>
+					<router-link to="/manage_meals">
+						<i class="fas fa-drumstick-bite"></i>
+						<span v-if="is_open">Manage Meals</span>
+					</router-link>
+				</div>
+				
+			</div>
+		</mq-layout>
 
 	</div>
 </template>
@@ -51,7 +55,7 @@ export default {
 	top: 0;
 	background: var(--main-blue);
 	height: 100vh;
-	z-index: 5;
+	z-index: 4;
 }
 
 .closed {
@@ -90,7 +94,7 @@ export default {
 	left: 100%;
 	width: 20px;
 	height: 20px;
-	transform: translateX(-11px);
+	transform: translateX(-12px);
 	border-radius: 50%;
 	border: 1px solid black;
 	z-index: 5;

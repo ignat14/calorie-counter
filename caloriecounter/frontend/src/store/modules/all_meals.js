@@ -10,7 +10,7 @@ const getters = {
 }
 
 const actions = {
-	async fetchAllMeals({ commit }, id) {
+	async fetchAllMeals({ commit }) {
 		let response = await AllMealsAPI.getAllMeals();
 		commit('fetchAllMeals', response.data);
 	},

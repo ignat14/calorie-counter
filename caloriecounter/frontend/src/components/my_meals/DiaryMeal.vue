@@ -70,13 +70,13 @@ export default {
 .meal-input {
 	width: 150px;
 	margin: 10px;
-	margin-top: 30px;
+	margin-top: 10px;
 	padding: 10px;
 	text-align: center;
 	outline: none;
 	border: none;
 	border-bottom: 1px solid gray;
-	font-size: 18px;
+	font-size: 1.3em;
 }
 
 .time-input {
@@ -90,5 +90,12 @@ export default {
 .delete-icon:hover {
 	transform: scale(1.5);
 }
+
+@media (max-width: 640px) {
+	.meal-box {
+		flex-direction: column;
+	}
+}
+
 
 </style>

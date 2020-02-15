@@ -8,7 +8,7 @@
 
 <script>
 import AllMealsAPI from '@/services/api/all_meals.js';
-import ManagedMeal from '@/components/ManagedMeal.vue';
+import ManagedMeal from '@/components/all_meals/ManagedMeal.vue';
 import { mapActions, mapGetters } from 'vuex';
 
 

@@ -57,11 +57,12 @@ export default {
 }
 
 .settings-item label {
-	margin-right: 60px;
+	padding: 30px;
 }
 
 .settings-item input {
 	padding: 7px;
+	margin: 10px;
 	font-size: 17px;
 	width: 160px;
 }
@@ -75,7 +76,12 @@ export default {
 	cursor: pointer;
 	align-self: center;
 	margin-top: 100px;
-	margin-left: 500px;
+}
+
+@media (min-width: 840px) {
+	.settings-list button {
+		margin-left: 500px;
+	}
 }
 
 </style>

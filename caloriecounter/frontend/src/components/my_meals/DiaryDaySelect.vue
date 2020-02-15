@@ -92,19 +92,24 @@ export default {
 .diary-day-picker {
 	display: flex;
 	justify-content: center;
-		width: 200px;
+	width: 200px;
 	margin: 0 20px;
 }
 
 .diary-day-picker-title {
-	font-size: 30px;
-	width: 180px;
+	font-size: 1.6rem;
+	width: 100%;
 	background: none;
 	border: none;
 	text-align: center;
 	cursor: pointer;
 }
 
+@media (max-width: 900px) {
+	.diary-day-picker {
+		width: 140px;
+	}
+}
 
 .diary-day-select i {
 	cursor: pointer;
