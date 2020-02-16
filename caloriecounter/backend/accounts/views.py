@@ -57,21 +57,6 @@ class Logout(APIView):
         return Response(status=status.HTTP_200_OK)
 
 
-
-@csrf_exempt
-def activate(request, uidb64, token):
-    try:
-        uid = force_text(urlsafe_base64_decode(uidb64))
-        user = User.objects.get(pk=uid)
-    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
-        user = None
-    if user is not None and account_activation_token.check_token(user, token):
-        user.is_active = True
-        user.save()
-        return redirect('http://0.0.0.0:8080/login')
-    else:
-        return HttpResponse('Activation link is invalid!')
-
 class Signup(generics.CreateAPIView):
 	queryset = User.objects.all()
 	serializer_class = SignupUserSerializer
@@ -88,3 +73,18 @@ class Signup(generics.CreateAPIView):
 			"request": self.request,
 			"password": self.request.data['password1']
 			}
+
+
+@csrf_exempt
+def activate(request, uidb64, token):
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        return redirect('http://0.0.0.0:8080/login')
+    else:
+        return HttpResponse('Activation link is invalid!')

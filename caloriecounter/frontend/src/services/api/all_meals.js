@@ -5,6 +5,10 @@ export default {
 		let response = await axios.get('http://localhost:8000/api/all_meals', {params});
 		return response;
 	},
+	async createMeal(data) {
+		let response = await axios.post('http://localhost:8000/api/all_meals', data);
+		return response;
+	},
 	async updateMeal(id, data) {
 		let response = await axios.put(`http://localhost:8000/api/all_meals/${id}`, data);
 		return response;

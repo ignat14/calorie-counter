@@ -7,7 +7,6 @@
 </template>
 
 <script>
-import AllMealsAPI from '@/services/api/all_meals.js';
 import ManagedMeal from '@/components/all_meals/ManagedMeal.vue';
 import { mapActions, mapGetters } from 'vuex';
 
@@ -21,11 +20,7 @@ export default {
 		...mapGetters(['all_meals']),
 	},
 	methods: {
-		...mapActions([]),
-		fetchAllMeals: async function() {
-			let response = await AllMealsAPI.getAllMeals();
-			this.all_meals = response.data;
-		},
+		...mapActions(['fetchAllMeals']),
 		deleteMeal(meal_id) {
 			for (let i = 0; i < this.all_meals.length; i++) {
 				if (this.all_meals[i].id === meal_id) {

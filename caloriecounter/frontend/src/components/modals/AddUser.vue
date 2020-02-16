@@ -31,7 +31,7 @@
 					</select>
 				</div>
 
-				<button @click="createUser()">Add User</button>
+				<button @click="createUserClicked()">Add User</button>
 			</div>
 
 		</div>
@@ -40,7 +40,6 @@
 </template>
 
 <script>
-import AuthAPI from '@/services/api/auth.js';
 import { mapGetters, mapActions } from 'vuex';
 export default {
 	name: "AddUserModal",
@@ -56,8 +55,8 @@ export default {
 		...mapGetters(['add_user_modal', 'all_users'])
 	},
 	methods: {
-		...mapActions(['toggleAddUserModal']),
-		createUser: async function() {
+		...mapActions(['toggleAddUserModal', 'createUser']),
+		createUserClicked: async function() {
 			let data = {
 				"email": this.email,
 				"password1": this.password1,
@@ -66,8 +65,8 @@ export default {
 			if (this.permission) {
 				data.permission = this.permission;
 			}
-			let response = await AuthAPI.signUp(data);
-			console.log(response.data);
+			this.createUser(data);
+			this.toggleAddUserModal(false);
 			
 		}
 	}

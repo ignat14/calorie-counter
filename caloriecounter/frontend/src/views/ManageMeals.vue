@@ -44,7 +44,7 @@ export default {
 		}
 	},
 	methods: {
-		...mapActions(['fetchAllMeals', 'toggleAllMealsFilterModal', 'toggleAddMealModal']),
+		...mapActions(['fetchAllMeals', 'toggleAllMealsFilterModal', 'toggleAddMealModal', 'fetchAllUsers']),
 		toggleFilters: function() {
 			if (this.$mq === 'laptop' || this.$mq === 'desktop') {
 				this.show_filters = !this.show_filters;
@@ -56,6 +56,7 @@ export default {
 	},
 	created: function() {
 		this.fetchAllMeals();
+		this.fetchAllUsers();
 	}
 }
 </script>

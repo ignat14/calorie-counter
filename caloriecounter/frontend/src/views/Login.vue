@@ -64,7 +64,7 @@ export default {
         "password": this.password
 			}
 			try {
-				let response = await axios.post('http://localhost:8000/api-token-auth/', data);
+				let response = await axios.post('http://localhost:8000/api/auth/login', data);
 				localStorage.drf_token = response.data.token;
 				this.error_message = "";
 				await this.fetchUser();

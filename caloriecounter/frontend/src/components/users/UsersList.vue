@@ -7,24 +7,19 @@
 </template>
 
 <script>
-import UsersAPI from '@/services/api/users.js';
 import User from '@/components/users/User.vue';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
 	name: "UsersList",
 	components: {
 		User
 	},
-	data() {
-		return {
-			all_users: []
-		};
+	computed: {
+		...mapGetters(['all_users'])
 	},
 	methods: {
-		fetchAllUsers: async function() {
-			let response = await UsersAPI.getAllUsers();
-			this.all_users = response.data;
-		},
+		...mapActions(['fetchAllUsers']),
 		deleteUser: function(id) {
 			for (let i = 0; i < this.all_users.length; i++) {
 				if (this.all_users[i].id === id) {

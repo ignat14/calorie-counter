@@ -6,5 +6,5 @@ export default {
 		return response;
 	},
 	getLoggedUser: async () => await axios.get('http://localhost:8000/api/users/self'),
-	logOut: async () => await axios.post('http://localhost:8000/api/logout/', {})
+	logOut: async () => await axios.post('http://localhost:8000/api/auth/logout', {})
 }

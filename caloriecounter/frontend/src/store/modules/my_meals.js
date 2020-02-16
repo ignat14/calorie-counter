@@ -14,7 +14,7 @@ const actions = {
 		let response = await MyMealsAPI.getMyMeals(params);
 		commit('fetchMyMeals', response.data);
 	},
-	async filterMeals({ commit }, params) {
+	async filterMyMeals({ commit }, params) {
 		let response = await MyMealsAPI.getMyMeals(params);
 		commit('fetchMyMeals', response.data);
 	}

@@ -1,6 +1,8 @@
 <template>
 	<div class="managed-meal-main">
-		<input class="mm-input user" type="text" name="user" v-model="meal.user">
+		<select v-model="meal.user" @change="userChange()" class="mm-input user">
+			<option v-for="user in all_users" :key="user.id" :value="user.id">{{user.email}}</option>
+		</select>
 		<div class="date-time">
 			<div class="mm-input date-picker-div">
 				<VueCtkDateTimePicker v-model="meal.date"
@@ -33,11 +35,15 @@
 
 <script>
 import AllMealsAPI from '@/services/api/all_meals.js';
+import { mapGetters } from 'vuex';
 
 export default {
 	name: "ManagedMeal",
 	props: {
 		meal: Object
+	},
+	computed: {
+		...mapGetters(['all_users'])
 	},
 	methods: {
 		updateMeal: function() {
@@ -69,7 +75,8 @@ export default {
 
 .user {
 	grid-area: user;
-	padding: 5px 0;
+	padding: 5px 2px;
+	background: #fff;
 }
 
 .date-time {

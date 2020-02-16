@@ -3,7 +3,7 @@
 
 			<div class="mm-filter" data-label="User">
 				<select v-model="user_id" @change="userChange()">
-					<option v-for="user in users" :key="user.id" :value="user.id">{{user.email}}</option>
+					<option v-for="user in all_users" :key="user.id" :value="user.id">{{user.email}}</option>
 					<option value="">All</option>
 				</select>
 			</div>
@@ -54,8 +54,7 @@
 </template>
 
 <script>
-import UsersAPI from '@/services/api/users.js';
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
 	name: "ManageMealsFilters",
@@ -70,9 +69,11 @@ export default {
 			time_from: "",
 			time_to: "",
 			search_val: "",
-			user_id: null,
-			users: []
+			user_id: null
 		}
+	},
+	computed: {
+		...mapGetters(['all_users'])
 	},
 	methods: {
 		...mapActions(['filterMeals']),
@@ -132,10 +133,6 @@ export default {
 					this.filterMeals(this.params);
 				}, 200);
 		}
-	},
-	created: async function() {
-		let response = await UsersAPI.getAllUsers();
-		this.users = response.data;
 	}
 }
 </script>

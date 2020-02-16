@@ -4,13 +4,15 @@ import authAPI from '@/services/api/auth.js';
 
 import my_meals from './modules/my_meals.js';
 import all_meals from './modules/all_meals.js';
+import users from './modules/users.js';
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   modules: {
     my_meals,
-    all_meals
+    all_meals,
+    users
   },
   state: {
     logged_user: {},

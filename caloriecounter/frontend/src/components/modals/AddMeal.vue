@@ -9,14 +9,14 @@
 
 				<div class="modal-form-item">
 					<label for="user">User</label>
-					<select v-model="all_users">
-						<option v-for="user in all_users" :key="user.id">{{user}}</option>
+					<select v-model="new_meal.user">
+						<option v-for="user in all_users" :key="user.id" :value="user.id">{{user.email}}</option>
 					</select>
 				</div>
 
 				<div class="modal-form-item">
 					<label for="date">Date</label>
-					<VueCtkDateTimePicker v-model="date"
+					<VueCtkDateTimePicker v-model="new_meal.date"
 																class="date-picker-input"
 																:only-date="true"
 																label="Select Date"
@@ -27,7 +27,7 @@
 
 				<div class="modal-form-item">
 					<label for="time">Time</label>
-					<VueCtkDateTimePicker v-model="time"
+					<VueCtkDateTimePicker v-model="new_meal.time"
 																class="time-picker-input"
 																:only-time="true"
 																label="Select Time"
@@ -39,15 +39,15 @@
 
 				<div class="modal-form-item">
 					<label for="description">Description</label>
-					<input type="text">
+					<input type="text" v-model="new_meal.description">
 				</div>
 
 				<div class="modal-form-item">
 					<label for="calories">Calories</label>
-					<input type="number">
+					<input type="number" v-model="new_meal.calories">
 				</div>
 
-				<button>Add Meal</button>
+				<button @click="createMealClick()">Add Meal</button>
 			</div>
 
 		</div>
@@ -57,24 +57,29 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
+
 export default {
 	name: "AddUserModal",
 	data() {
 		return {
-			all_users: [
-				'user1',
-				'user2',
-				'user3'
-			],
-			date: "",
-			time: ""
+			new_meal: {
+				user: null,
+				date: "",
+				time: "",
+				description: "",
+				calories: null
+			}
 		}
 	},
 	computed: {
 		...mapGetters(['add_meal_modal', 'all_users'])
 	},
 	methods: {
-		...mapActions(['toggleAddMealModal'])
+		...mapActions(['toggleAddMealModal', 'createMeal']),
+		createMealClick: async function() {
+			this.createMeal(this.new_meal);
+			this.toggleAddMealModal(false);
+		}
 	}
 }
 </script>
