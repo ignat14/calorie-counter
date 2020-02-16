@@ -111,13 +111,13 @@ input {
 	left: 100%;
 	transform: translateX(-100%);
 	padding: 20px;
-	color: #000;
+	color: #fff;
 	font-size: 30px;
 	cursor: pointer;
 }
 
 .exit-modal:hover {
-	color: var(--main-blue);
+	color: #000;
 }
 
 @media (min-width: 900px) {
@@ -127,6 +127,23 @@ input {
 	}
 }
 
+.main-modal h1 {
+	margin: 0;
+	padding: 30px;
+	background: rgba(0, 0, 0, 0.35);
+	color: #fff;
+	border-top-left-radius: 5% 20%;
+	border-top-right-radius: 5% 20%;
+	border-bottom: 1px solid #777;
+}
+
+@media (max-width: 900px) {
+	.main-modal h1 {
+		border-top-left-radius: 5% 30%;
+		border-top-right-radius: 5% 30%;
+	}
+		
+}
 
 .open-modal-icon {
 	position: absolute;

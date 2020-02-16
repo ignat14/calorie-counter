@@ -39,6 +39,13 @@ export default {
 			await UsersAPI.patchProfile(this.logged_user.id, this.expected_calories);
 		}
 	},
+	watch: {
+		'expected_calories': function() {
+			if (this.expected_calories == "" || this.expected_calories < 0) {
+				this.expected_calories = 0;
+			}
+		}
+	},
 	created() {
 		this.getProfile();
 	}

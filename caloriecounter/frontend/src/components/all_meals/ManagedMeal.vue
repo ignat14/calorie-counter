@@ -27,20 +27,49 @@
 		<input class="mm-input desc" type="text" name="description" v-model="meal.description">
 		<input class="mm-input cals" type="number" name="calories" v-model="meal.calories">
 		<div class="save-delete">
-			<button class="mm-input save" @click="updateMeal()">Save</button>
-			<button class="mm-input delete" @click="deleteMeal()">Delete</button>
+
+			<span class="btn-wrapper">
+				<button class="save" @click="show_save_dialog = !show_save_dialog">Save</button>
+				<ConfirmDialog
+						v-if="show_save_dialog"
+						text="Are you sure you want to save this meal?"
+						@yes="updateMeal()"
+						@no="show_save_dialog = false" 
+					/>
+			</span>
+
+			<span class="btn-wrapper">
+				<button class="delete" @click="show_delete_dialog = !show_delete_dialog">Delete</button>
+				<ConfirmDialog
+					v-if="show_delete_dialog"
+					text="Are you sure you want to delete this meal?"
+					@yes="deleteMeal()"
+					@no="show_delete_dialog = false" 
+				/>
+			</span>
+
 		</div>
 	</div>
 </template>
 
 <script>
 import AllMealsAPI from '@/services/api/all_meals.js';
+import ConfirmDialog from '@/components/utils/ConfirmDialog.vue';
 import { mapGetters } from 'vuex';
 
 export default {
 	name: "ManagedMeal",
+	components: {
+		ConfirmDialog
+	},
 	props: {
 		meal: Object
+	},
+	data() {
+		return {
+			show_save_dialog: false,
+			show_delete_dialog: false
+		}
 	},
 	computed: {
 		...mapGetters(['all_users'])
@@ -48,6 +77,7 @@ export default {
 	methods: {
 		updateMeal: function() {
 			AllMealsAPI.updateMeal(this.meal.id, this.meal);
+			this.show_save_dialog = false
 		},
 		deleteMeal: async function() {
 			await AllMealsAPI.deleteMeal(this.meal.id);
@@ -97,25 +127,35 @@ export default {
 .save-delete {
 	grid-area: save-del;
 	display: flex;
+	align-items: center;
 }
 
 .date-picker-div {
 	width: 150px;
 }
 
-.managed-meal-main button {
-	width: 60px;
+.btn-wrapper {
+	position: relative;
+}
+
+.save {
+	background: rgb(59, 206, 83);
+	width: 70px;
+	padding: 12px;
+	margin: 0 2px;
 	border: 1px solid #999;
 	color: #fff;
 	cursor: pointer;
 }
 
-.save {
-	background: rgb(59, 206, 83);
-}
-
 .delete {
 	background: rgb(245, 94, 94);
+	padding: 12px;
+	margin: 0 2px;
+	width: 70px;
+	border: 1px solid #999;
+	color: #fff;
+	cursor: pointer;
 }
 
 @media (max-width: 1240px) {

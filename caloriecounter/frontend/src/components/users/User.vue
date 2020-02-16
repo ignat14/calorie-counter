@@ -10,8 +10,29 @@
 				<option>MANAGER</option>
 				<option>ADMIN</option>
 			</select>
-			<button class="save" @click="saveUser()">Save</button>
-			<button class="delete" @click="deleteUser()">Delete</button>
+
+
+			
+
+			<span class="btn-wrapper">
+				<button class="save" @click="show_save_dialog = !show_save_dialog">Save</button>
+				<ConfirmDialog
+					v-if="show_save_dialog"
+					text="Are you sure you want to save this user?"
+					@yes="saveUser()"
+					@no="show_save_dialog = false" 
+				/>
+			</span>
+
+			<span class="btn-wrapper">
+				<button class="delete" @click="show_delete_dialog = !show_delete_dialog">Delete</button>
+				<ConfirmDialog
+					v-if="show_delete_dialog"
+					text="Are you sure you want to delete this user?"
+					@yes="deleteUser()"
+					@no="show_delete_dialog = false" 
+				/>
+			</span>
 
 		</div>
 	</div>
@@ -19,11 +40,21 @@
 
 <script>
 import UsersAPI from '@/services/api/users.js';
+import ConfirmDialog from '@/components/utils/ConfirmDialog.vue';
 
 export default {
 	name: "User",
+	components: {
+		ConfirmDialog
+	},
 	props: {
 		user: Object
+	},
+	data() {
+		return {
+			show_delete_dialog: false,
+			show_save_dialog: false
+		}
 	},
 	methods: {
 		saveUser: function() {
@@ -85,7 +116,12 @@ export default {
 }
 
 .delete {
+	position: relative;
 	background: rgb(245, 94, 94);
+}
+
+.btn-wrapper {
+	position: relative;
 }
 
 @media (max-width: 420px) {

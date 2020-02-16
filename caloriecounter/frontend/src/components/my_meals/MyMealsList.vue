@@ -55,7 +55,7 @@
 					<h1 :class="{'green': calories_balance && !show_filters, 
 											'red': !calories_balance && !show_filters, 
 											'gray': !expected_calories || show_filters}">
-						{{ all_calories }}<span>Cals</span>
+						{{ all_calories }}<span v-if="!expected_calories || show_filters">Cals</span>
 					</h1>
 					<h4 v-if="expected_calories && !show_filters">
 						/ {{ expected_calories }} Cals
@@ -65,7 +65,7 @@
 			</div>
 
 			<div v-for="meal in my_meals" :key="meal.id">
-				<DiaryMeal :meal="meal" @deleteMeal="deleteMeal"/>
+				<MyMeal :meal="meal" @deleteMeal="deleteMeal"/>
 			</div>
 
 			<AddMeal :current_date="current_date" @addNewMeal="addNewMeal" v-if="!show_filters" />
@@ -77,7 +77,7 @@
 
 <script>
 import MyMealsAPI from '@/services/api/my_meals.js';
-import DiaryMeal from '@/components/my_meals/DiaryMeal.vue';
+import MyMeal from '@/components/my_meals/MyMeal.vue';
 import DiaryDaySelect from '@/components/my_meals/DiaryDaySelect.vue';
 import AddMeal from '@/components/my_meals/AddMeal.vue';
 import { mapGetters } from "vuex";
@@ -86,7 +86,7 @@ export default {
 	name: 'MyMealsList',
 	components: {
 		DiaryDaySelect,
-		DiaryMeal,
+		MyMeal,
 		AddMeal
 	},
 	data() {
@@ -206,6 +206,7 @@ export default {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css?family=Odibee+Sans&display=swap');
 .my-meals-wrapper {
 	display: flex;
 	justify-content: space-around;
@@ -216,7 +217,8 @@ export default {
 }
 
 .count-calories {
-	font-family: 'Dancing Script', cursive;
+	/* font-family: 'Dancing Script', cursive; */
+	font-family: 'Odibee Sans', cursive;
 }
 
 .count-calories h1 {
@@ -237,7 +239,7 @@ export default {
 }
 
 .green {
-	color: green;
+	color: rgb(56, 189, 56);
 }
 
 .red {

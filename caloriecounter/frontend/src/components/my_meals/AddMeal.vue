@@ -1,24 +1,35 @@
 <template>
 	<div class="add-meal">
 		<div class="meal-box">
-			<div>
-				<VueCtkDateTimePicker v-model="new_meal.time"
-															:only-time="true"
-															format="HH:mm:ss"
-															formatted="hh:mm a"
-															:minuteInterval="10"
-				>
-					<input v-model="new_meal.time" class="meal-input time-input" type="text" placeholder="Add time" readonly>
-				</VueCtkDateTimePicker>
-			</div>
-			<input type="text" 
-							class="meal-input" 
-							v-model="new_meal.description"
-							placeholder="Add description">
-			<input type="number" 
-							class="meal-input" 
-							v-model.number="new_meal.calories" 
-							placeholder="Add Calories">
+				
+				<span class="input-wrapper">
+					<VueCtkDateTimePicker v-model="new_meal.time"
+																:only-time="true"
+																format="HH:mm:ss"
+																formatted="hh:mm a"
+																:minuteInterval="10">
+						<input v-model="new_meal.time" class="meal-input time-input" type="text" 
+									placeholder="Add time" readonly :class="{'is-invalid': time_errors}">
+					</VueCtkDateTimePicker>
+					<div v-if="time_errors" class="error-msg">This value is invalid</div>
+				</span>
+				<span class="input-wrapper">
+					<input type="text" 
+									class="meal-input"
+									v-model="new_meal.description"
+									placeholder="Add description"
+									:class="{'is-invalid': description_errors}">
+					<div v-if="description_errors" class="error-msg">This value is invalid</div>
+				</span>
+
+			<span class="input-wrapper">
+				<input type="number" 
+								class="meal-input" 
+								v-model.number="new_meal.calories" 
+								placeholder="Add Calories"
+								:class="{'is-invalid': calories_errors}">
+				<div v-if="calories_errors" class="error-msg">This value is invalid</div>
+			</span>
 
 			<i class="fas fa-check add-icon" @click="addMeal"></i>
 		</div>
@@ -39,15 +50,27 @@ export default {
 				time: "",
 				description: "",
 				calories: null,
-				date: this.current_date
-			}
+				date: this.current_date,
+			},
+			isInvalid: true,
+			time_errors: "",
+			description_errors: "",
+			calories_errors: ""
 		};
 	},
 	methods: {
 		addMeal: async function() {
-			let response = await MyMealsAPI.createMyMeal(this.new_meal);
-			this.$emit('addNewMeal', response.data);
-			this.clearNewMeal();
+			try {
+				let response = await MyMealsAPI.createMyMeal(this.new_meal);
+				this.$emit('addNewMeal', response.data);
+				this.clearNewMeal();
+				this.clearErrors();
+			}
+			catch (err) {
+				this.time_errors = err.response.data.time;
+				this.description_errors = err.response.data.description;
+				this.calories_errors = err.response.data.calories;
+			}
 		},
 		clearNewMeal: function() {
 			this.new_meal = {
@@ -56,12 +79,17 @@ export default {
 				calories: null,
 				date: this.current_date
 			};
+		},
+		clearErrors: function() {
+			this.time_errors = "";
+			this.description_errors = "";
+			this.calories_errors = "";
 		}
 	},
 	watch: {
-		calories: function() {
-			if (this.calories == "" || this.calories < 0) {
-				this.calories = 0;
+		'new_meal.calories': function() {
+			if (this.new_meal.calories == "" || this.new_meal.calories < 0) {
+				this.new_meal.calories = 0;
 			}
 		}
 	}
@@ -77,10 +105,28 @@ export default {
 
 .add-icon {
 	cursor: pointer;
+	font-size: 1.4rem;
+	padding: 10px;
 }
 
 .add-icon:hover {
-	transform: scale(1.5)
+	transform: scale(1.2)
+}
+
+.input-wrapper {
+	position: relative;
+}
+
+.is-invalid {
+	border-bottom: 2px solid red;
+}
+
+.error-msg {
+	position: absolute;
+	top: 90%;
+	left: 5%;
+	color: red;
+	font-size: 0.8rem;
 }
 
 </style>

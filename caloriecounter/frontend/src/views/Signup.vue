@@ -146,6 +146,7 @@ export default {
 	width: 0%;
 	height: 2px;
 	left: 0;
+	top: 100%;
 	background: blue;
 	transition: .5s;
 }

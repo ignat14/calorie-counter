@@ -11,7 +11,11 @@ class ProfileSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Profile
 		fields = ['user_id', 'expected_calories_per_day']
-
+	
+	def validate_expected_calories_per_day(self, value):
+		if value < 0:
+			raise serializers.ValidationError("Negative calories are not allowed")
+		return value
 
 class UserSerializer(serializers.ModelSerializer):
 	profile = ProfileSerializer(required=False)
@@ -38,6 +42,15 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 		model = User
 		fields = ['id', 'email', 'permission', 'profile']
 		read_only_fields = ['id']
+
+	def validate_permission(self, new_permission):
+		own_permission = self.context.get('request').user.permission
+		old_permission = self.instance.permission
+		if own_permission != 'ADMIN' and new_permission == 'ADMIN':
+			raise serializers.ValidationError(f"{own_permission}S don't have permission to upgrade to ADMIN")
+		if own_permission != 'ADMIN' and old_permission == 'ADMIN':
+			raise serializers.ValidationError(f"{own_permission}S don't have permission to downgrade from ADMIN")
+		return new_permission
 
 
 class SignupUserSerializer(serializers.ModelSerializer):
