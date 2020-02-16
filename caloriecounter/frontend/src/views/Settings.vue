@@ -7,11 +7,21 @@
 			<div class="settings-item">
 				<label for="expected_calories">Expected Calories Per Day</label>
 				<input type="number" name="expected_calories"
-								v-model="expected_calories">
+								v-model.number="expected_calories">
 			</div>
+
 			<button @click="patchProfile()">
 				Save
 			</button>
+
+
+			<div class="success-message">
+				{{ success_message }}
+			</div>
+			<div class="error-message">
+				{{ error_message }}
+			</div>
+
 		</div>
 	</div>
 </template>
@@ -24,7 +34,9 @@ export default {
 	name: "Settings",
 	data() {
 		return {
-			expected_calories: null
+			expected_calories: null,
+			error_message: "",
+			success_message: ""
 		};
 	},
 	computed: {
@@ -36,8 +48,24 @@ export default {
 			this.expected_calories = response.data.expected_calories_per_day;
 		},
 		patchProfile: async function() {
-			await UsersAPI.patchProfile(this.logged_user.id, this.expected_calories);
-		}
+			try {
+				await UsersAPI.patchProfile(this.logged_user.id, this.expected_calories);
+				this.success_message = "Updated";
+				this.error_message = "";
+				this.clearMessages();
+			}
+			catch (err) {
+				this.error_message = "Plese enter valid data.";
+				this.success_message = "";
+				this.clearMessages()
+			}
+		},
+		clearMessages: function() {
+			setTimeout(() => {
+					this.error_message = "";
+					this.success_message = "";
+				}, 2000);
+		},
 	},
 	watch: {
 		'expected_calories': function() {
@@ -85,10 +113,15 @@ export default {
 	margin-top: 100px;
 }
 
-@media (min-width: 840px) {
-	.settings-list button {
-		margin-left: 500px;
-	}
+
+.success-message {
+	margin: 30px;
+	color: green;
+}
+
+.error-message {
+	margin: 30px;
+	color: red;
 }
 
 </style>

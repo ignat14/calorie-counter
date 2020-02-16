@@ -4,29 +4,34 @@
 
 			<h1>Calorie Counter</h1>
 
-			<div class="textbox">
+			<div class="textbox" :class="{'is-invalid': error_email}">
 				<input type="text"
 								v-model="email"
-								:class="{'focus': email || email_focused}"
 								@focus="email_focused = true"
-								@blur="email_focused = false">
+								@blur="email_focused = false"
+								:class="{'focus': email || email_focused}">
 				<span data-placeholder="Email"></span>
+				<div v-if="error_email" class="error-msg">{{error_email}}</div>
 			</div>
-			<div class="textbox">
+
+			<div class="textbox" :class="{'is-invalid': error_password1}">
 				<input type="password"
 								v-model="password1"
 								:class="{'focus': password1 || password1_focused}"
 								@focus="password1_focused = true"
 								@blur="password1_focused = false">
 				<span data-placeholder="Password"></span>
+				<div v-if="error_password1" class="error-msg">{{error_password1}}</div>
 			</div>
-			<div class="textbox">
+
+			<div class="textbox" :class="{'is-invalid': error_password2}">
 				<input type="password"
 								v-model="password2"
 								:class="{'focus': password2 || password2_focused}"
 								@focus="password2_focused = true"
 								@blur="password2_focused = false">
 				<span data-placeholder="Repeat Password"></span>
+				<div v-if="error_password2" class="error-msg">{{error_password2}}</div>
 			</div>
 
 			<div class="error-message">
@@ -64,7 +69,10 @@ export default {
 			password1_focused: false,
 			password2_focused: false,
 			error_message: "",
-			success_message: ""
+			success_message: "",
+			error_email: "",
+			error_password1: "",
+			error_password2: ""
 		};
 	},
 	methods: {
@@ -80,11 +88,20 @@ export default {
 				await AuthApi.signUp(data);
 				this.success_message = "Activation Email sent. Please verify before log in";
 				this.error_message = "";
+				this.error_email = "";
+				this.error_password1 = "";
+				this.error_password2 = "";
 			}
 			catch(err) {
-				console.log(err.response.data);
+				if (err.response.data.email) { this.error_email = err.response.data.email[0]; }
+				else { this.error_email = "" }
+				if (err.response.data.password1) { this.error_password1 = err.response.data.password1[0]; }
+				else { this.error_password1 = ""}
+				if (err.response.data.password2) { this.error_password2 = err.response.data.password2[0]; }
+				else { this.error_password2 = ""}
+				if (err.response.data.non_field_errors) { this.error_message = err.response.data.non_field_errors[0] }
+				else { this.error_message = "" }
 				
-				this.error_message = "Something went wrong";
 				this.success_message = "";
 			}
 			
@@ -184,15 +201,29 @@ export default {
 }
 
 .error-message {
+	margin: 30px;
 	color: red;
 }
 
 .success-message {
+	margin: 30px;
 	color: green;
 }
 
 a {
 	font-weight: bold;
+}
+
+.is-invalid {
+	border-bottom: 2px solid red;
+}
+
+.error-msg {
+	position: absolute;
+	top: 102%;
+	left: 0;
+	color: red;
+	font-size: 0.8rem;
 }
 
 </style>

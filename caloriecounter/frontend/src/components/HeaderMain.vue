@@ -15,9 +15,9 @@
             <i v-if="account_menu_open" class="fas fa-chevron-up"></i>
           </span>
         <div v-if="account_menu_open" class="dropdown">
-          <div class="dropdown-item">
+          <router-link to="/change_password" class="dropdown-item">
             Change Password
-          </div>
+          </router-link>
           <div class="dropdown-item" @click="logout_user">
             Logout
           </div>
@@ -102,6 +102,7 @@ export default {
 }
 
 .dropdown-item {
+  display: block;
   padding: 10px;
   border: 1px gray solid;
   background: white;
@@ -110,6 +111,11 @@ export default {
 .dropdown-item:hover {
   background: var(--main-blue);
   color: white;
+}
+
+a {
+  text-decoration: none;
+  color: #000;
 }
 
 .welcome-user-mobile {

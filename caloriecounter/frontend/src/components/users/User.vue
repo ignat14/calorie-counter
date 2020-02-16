@@ -58,8 +58,8 @@ export default {
 	},
 	methods: {
 		saveUser: function() {
-			console.log("Saving user", this.user);
-			UsersAPI.updateUser(this.user.id, this.user)
+			UsersAPI.updateUser(this.user.id, this.user);
+			this.show_save_dialog = false;
 		},
 		deleteUser: function() {
 		UsersAPI.deleteUser(this.user.id);

@@ -16,6 +16,7 @@ export default new Vuex.Store({
   },
   state: {
     logged_user: {},
+    loading: false,
     left_menu_show: false,
     right_menu_show: false,
     add_user_modal: false,
@@ -24,6 +25,7 @@ export default new Vuex.Store({
   },
   getters: {
     logged_user: (state) => state.logged_user,
+    loading: (state) => state.loading,
     left_menu_show: (state) => state.left_menu_show,
     right_menu_show: (state) => state.right_menu_show,
     add_user_modal: (state) => state.add_user_modal,
@@ -34,6 +36,9 @@ export default new Vuex.Store({
     async fetchUser({commit}) {
       const response = await authAPI.getLoggedUser();
       commit('fetchUser', response.data)
+    },
+    setLoading({commit}, value) {
+      commit('setLoading', value)
     },
     toggleLeftMenu({commit}, value ) {
 			commit('toggleLeftMenu', value)
@@ -58,6 +63,7 @@ export default new Vuex.Store({
   },
   mutations: {
     fetchUser: (state, logged_user) => state.logged_user = logged_user,
+    setLoading: (state, value) => state.loading = value,
     clearUser: (state) => state.logged_user = {},
     toggleLeftMenu: (state, value) => state.left_menu_show = value,
     toggleRightMenu: (state, value) => state.right_menu_show = value,

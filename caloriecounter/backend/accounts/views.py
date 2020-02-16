@@ -63,15 +63,10 @@ class Signup(generics.CreateAPIView):
 	permission_classes = [AllowAny]
 
 	def get_serializer_context(self, *args, **kwargs):
-		if 'password1' not in self.request.data:
-			raise serializers.ValidationError("Password 1 is required")
-		if 'password2' not in self.request.data:
-			raise serializers.ValidationError("Password 2 is required")
-		if self.request.data['password1'] != self.request.data['password2']:
-			raise serializers.ValidationError({"non_field": "The passwords did not match"})
 		return {
 			"request": self.request,
-			"password": self.request.data['password1']
+			"password1": self.request.data.get('password1'),
+			"password2": self.request.data.get('password2')
 			}
 
 

@@ -1,9 +1,9 @@
 <template>
 	<div v-if="is_mobile && right_menu_show" class="side-menu-mobile">
 		<div class="icons-wrapper">
-			<div>
+			<router-link to="/change_password" class="dropdown-item" @click.native="toggleRightMenu(false)">
 				Change Password
-			</div>
+			</router-link>
 			<div @click="logout_clicked()">
 				Log Out
 			</div>
@@ -59,7 +59,7 @@ export default {
 	border-bottom: 1px solid #fff;
 }
 
-.icons-wrapper > div {
+.icons-wrapper > div, .icons-wrapper > a {
 	text-decoration: none;
 	color: #fff;
 	border-top: 1px solid #fff;

@@ -16,7 +16,6 @@ const actions = {
 	},
 	async createUser({ commit }, new_user) {
 		let response = await AuthAPI.signUp(new_user);
-
 		commit('createUser', response.data);
 	}
 }

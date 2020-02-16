@@ -63,6 +63,25 @@ class SignupUserSerializer(serializers.ModelSerializer):
         }
 
 
+	def validate_permission(self, new_permission):
+		if not self.context.get('request').user:
+			raise serializers.ValidationError(f"Not authorized users can't select permission")
+		own_permission = self.context.get('request').user.permission
+		if own_permission != 'ADMIN' and new_permission == 'ADMIN':
+			raise serializers.ValidationError(f"{own_permission}S don't have permission to create ADMIN users")
+		return new_permission
+
+
+	def validate(self, data):
+		if not self.context.get('password1'):
+			raise serializers.ValidationError({"password1": ["Password is required"]})
+		if not self.context.get('password2'):
+			raise serializers.ValidationError({"password2": ["Password Confirmation is required"]})
+		if self.context.get('password1') != self.context.get('password2'):
+			raise serializers.ValidationError({"password2": ["The password did not match"]})
+		return data
+
+
 	def create(self, validated_data):
 		permission = 'USER'
 		if 'permission' in validated_data:

@@ -123,7 +123,8 @@ input {
 @media (min-width: 900px) {
 	.main-modal {
 		width: 50%;
-		height: 50%;
+		height: fit-content;
+		padding-bottom: 20px;
 	}
 }
 
@@ -214,8 +215,9 @@ input {
 }
 
 .modal-form > button {
-	width: 100px;
+	width: 150px;
 	background: var(--main-blue);
+	font-size: 1.1rem;
 	color: #fff;
 	border: 1px solid #000;
 	padding: 10px;

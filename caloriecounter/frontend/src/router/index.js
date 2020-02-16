@@ -22,6 +22,14 @@ const routes = [
     },
   },
   {
+    path: '/change_password',
+    name: 'ChangePassword',
+    component: () => import('../views/ChangePassword.vue'),
+    meta: {
+      requires_auth: true,
+    },
+  },
+  {
     path: '/',
     name: 'Diary',
     component: () => import('../views/Diary.vue'),
