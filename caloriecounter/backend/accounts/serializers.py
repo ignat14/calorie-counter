@@ -44,41 +44,43 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 		read_only_fields = ['id']
 
 	def validate_permission(self, new_permission):
-		own_permission = self.context.get('request').user.permission
+		self_user = self.context.get('request').user
+		own_permission = self_user.permission
 		old_permission = self.instance.permission
-		if own_permission != 'ADMIN' and new_permission == 'ADMIN':
+		if self_user == self.instance and old_permission != new_permission:
+			raise serializers.ValidationError(f"Can't change own permission")
+		if own_permission != 'ADMIN' and old_permission != 'ADMIN' and new_permission == 'ADMIN':
 			raise serializers.ValidationError(f"{own_permission}S don't have permission to upgrade to ADMIN")
-		if own_permission != 'ADMIN' and old_permission == 'ADMIN':
+		if own_permission != 'ADMIN' and old_permission == 'ADMIN' and new_permission != 'ADMIN':
 			raise serializers.ValidationError(f"{own_permission}S don't have permission to downgrade from ADMIN")
 		return new_permission
 
 
 class SignupUserSerializer(serializers.ModelSerializer):
+
 	class Meta:
 		model = User
 		fields = ['email', 'permission']
-		read_only_fields = ['password1', 'password2']
 		extra_kwargs = {
             'permission': {'required': False}
         }
 
 
 	def validate_permission(self, new_permission):
-		if not self.context.get('request').user:
+		if self.context.get('request').user.is_anonymous:
 			raise serializers.ValidationError(f"Not authorized users can't select permission")
 		own_permission = self.context.get('request').user.permission
 		if own_permission != 'ADMIN' and new_permission == 'ADMIN':
 			raise serializers.ValidationError(f"{own_permission}S don't have permission to create ADMIN users")
 		return new_permission
 
-
 	def validate(self, data):
 		if not self.context.get('password1'):
-			raise serializers.ValidationError({"password1": ["Password is required"]})
+			raise serializers.ValidationError({"password1": "Password is required."})
 		if not self.context.get('password2'):
-			raise serializers.ValidationError({"password2": ["Password Confirmation is required"]})
+			raise serializers.ValidationError({"password2": "Password Confirmation is required."})
 		if self.context.get('password1') != self.context.get('password2'):
-			raise serializers.ValidationError({"password2": ["The password did not match"]})
+			raise serializers.ValidationError({"password2": "The password did not match."})
 		return data
 
 
