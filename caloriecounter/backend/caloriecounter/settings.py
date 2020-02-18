@@ -146,7 +146,7 @@ STATIC_URL = '/static/'
 
 SITE_DOMAIN = 'localhost'
 SITE_PORT = '8000'
-FRONTEND_DOMAIN = "0.0.0.0"
+FRONTEND_DOMAIN = "localhost"
 FRONTEND_PORT = "8080"
 
 

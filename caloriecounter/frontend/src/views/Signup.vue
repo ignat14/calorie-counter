@@ -148,7 +148,7 @@ export default {
 .textbox {
 	border-bottom: 2px solid #adadad;
 	position: relative;
-	margin: 10px 0;
+	margin: 15px 0;
 }
 
 .textbox input {
@@ -197,7 +197,7 @@ export default {
 
 .login-btn-div {
 	position: relative;
-	margin-top: 30px;
+	margin-top: 40px;
 }
 
 .login-btn-div button{

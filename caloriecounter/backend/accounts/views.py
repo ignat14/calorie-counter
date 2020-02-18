@@ -9,7 +9,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from .serializers import UserSerializer, UserUpdateSerializer, ProfileSerializer, SignupUserSerializer, PasswordChangeSerializer
 from .models import User, Profile
-from accounts.permissions import IsAdmin, IsAdminOrManager
+from accounts.permissions import IsAdminOrManager
 from caloriecounter import settings as cc_settings
 
 from django.views.decorators.csrf import csrf_exempt
@@ -20,16 +20,21 @@ from .tokens import account_activation_token
 from rest_framework import serializers
 
 
-class UsersAPIView(mixins.CreateModelMixin, generics.ListAPIView):
+class UsersAPIView(generics.ListAPIView):
+	"""
+	API view that lists all the users.
+	Only available for admins and managers.
+	"""
 	queryset = User.objects.all()
 	serializer_class = UserSerializer
 	permission_classes = [IsAdminOrManager]
 
-	def post(self, request, *args, **kwargs):
-		return self.create(request, *args, **kwargs)
-
 
 class UsersRudView(generics.RetrieveUpdateDestroyAPIView):
+	"""
+	API view for retrieving, updateing and deleting Users.
+	Only available for admins and managers.
+	"""
 	lookup_field = 'pk'
 	queryset = User.objects.all()
 	serializer_class = UserUpdateSerializer
@@ -37,6 +42,11 @@ class UsersRudView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class SelfUserRudView(generics.RetrieveUpdateDestroyAPIView):
+	"""
+	API view for retrieving, updating and deleting own user information.
+	Right now can only change email.
+	Own Permission is not allowed to be changed.
+	"""
 	serializer_class = UserUpdateSerializer
 
 	def get_object(self):
@@ -47,6 +57,7 @@ class SelfUserRudView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class ProfileRudView(generics.RetrieveUpdateAPIView):
+	"""API view for retrieving, updating and deleting profile information."""
 	serializer_class = ProfileSerializer
 
 	def get_object(self):
@@ -54,13 +65,17 @@ class ProfileRudView(generics.RetrieveUpdateAPIView):
 	
 
 class Logout(APIView):
-    def post(self, request, format=None):
-        # delete the token to force a logout
-        request.user.auth_token.delete()
-        return Response(status=status.HTTP_200_OK)
+	"""Deleting the token to force a logout."""
+	def post(self, request, format=None):
+		request.user.auth_token.delete()
+		return Response(status=status.HTTP_200_OK)
 
 
 class Signup(generics.CreateAPIView):
+	"""
+	API view that overrides the create method for users.
+	After creating a new user, verification email is sent.
+	"""
 	queryset = User.objects.all()
 	serializer_class = SignupUserSerializer
 	permission_classes = [AllowAny]
@@ -72,7 +87,12 @@ class Signup(generics.CreateAPIView):
 			"password2": self.request.data.get('password2')
 			}
 
+
 class PasswordChange(generics.UpdateAPIView):
+	"""
+	API view that overrides the update method so
+	users can change their own passwords
+	"""
 	serializer_class = PasswordChangeSerializer
 
 	def get_object(self):
@@ -108,14 +128,19 @@ class PasswordChange(generics.UpdateAPIView):
 
 @csrf_exempt
 def activate(request, uidb64, token):
-    try:
-        uid = force_text(urlsafe_base64_decode(uidb64))
-        user = User.objects.get(pk=uid)
-    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
-        user = None
-    if user is not None and account_activation_token.check_token(user, token):
-        user.is_active = True
-        user.save()
-        return redirect(f'http://{cc_settings.FRONTEND_DOMAIN}:{cc_settings.FRONTEND_PORT}/login')
-    else:
-        return HttpResponse('Activation link is invalid!')
+	"""
+	API view that expects a valid token
+	(one that is received by email after signup)
+	so the user can be activated
+	"""
+	try:
+		uid = force_text(urlsafe_base64_decode(uidb64))
+		user = User.objects.get(pk=uid)
+	except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+		user = None
+	if user is not None and account_activation_token.check_token(user, token):
+		user.is_active = True
+		user.save()
+		return redirect(f'http://{cc_settings.FRONTEND_DOMAIN}:{cc_settings.FRONTEND_PORT}/login')
+	else:
+		return HttpResponse('Activation link is invalid!')

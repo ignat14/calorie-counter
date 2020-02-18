@@ -96,7 +96,18 @@ class SignupUserSerializer(serializers.ModelSerializer):
 			raise serializers.ValidationError({"password2": "Password Confirmation is required."})
 		if self.context.get('password1') != self.context.get('password2'):
 			raise serializers.ValidationError({"password2": "The password did not match."})
+		try:
+			validate_password(
+				self.context.get('password1'),
+				password_validators=get_password_validators(settings.AUTH_PASSWORD_VALIDATORS),
+				user=None
+			)
+		except ValidationError as e:
+			raise serializers.ValidationError({
+				'password1': e.messages
+			})
 		return data
+		
 
 
 	def create(self, validated_data):

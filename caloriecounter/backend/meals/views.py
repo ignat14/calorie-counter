@@ -9,6 +9,7 @@ import datetime
 
 
 class MyMealsAPIView(mixins.CreateModelMixin, generics.ListAPIView):
+	"""API view for creating and listing own meals"""
 	serializer_class = MyMealsSerializer
 
 	def get_queryset(self):
@@ -25,6 +26,7 @@ class MyMealsAPIView(mixins.CreateModelMixin, generics.ListAPIView):
 
 
 class MyMealsRudView(generics.RetrieveUpdateDestroyAPIView):
+	"""API view for retrieving, updating and deleing own meals"""
 	lookup_field = 'pk'
 	serializer_class = MyMealsSerializer
 
@@ -34,6 +36,10 @@ class MyMealsRudView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class AllMealsAPIView(mixins.CreateModelMixin, generics.ListAPIView):
+	"""
+	API view for creating and listing all meals.
+	Only available for admin users.
+	"""
 	serializer_class = AllMealsSerializer
 	permission_classes = [IsAdmin]
 
@@ -48,6 +54,10 @@ class AllMealsAPIView(mixins.CreateModelMixin, generics.ListAPIView):
 
 
 class AllMealsRudView(generics.RetrieveUpdateDestroyAPIView):
+	"""
+	API view for retrieving, updating and deleting meals.
+	Only available for admin users
+	"""
 	lookup_field = 'pk'
 	queryset = Meal.objects.all()
 	serializer_class = AllMealsSerializer

@@ -98,7 +98,7 @@ export default {
   width: 100%;
   height: 50px;
   background: white;
-  transform: translate(-50%, 20px);
+  transform: translate(-50%, 21px);
 }
 
 .dropdown-item {

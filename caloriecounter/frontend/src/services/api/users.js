@@ -3,7 +3,7 @@ import settings from '@/settings';
 
 export default {
 	async getAllUsers() {
-		let response = await axios.get(`http://${settings.backend_domain}:${settings.backend_port}/api/users`);
+		let response = await axios.get(`http://${settings.backend_domain}:${settings.backend_port}/api/users/`);
 		return response;
 	},
 	async updateUser(id, user) {

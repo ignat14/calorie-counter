@@ -28,7 +28,18 @@
 			</div>
 
 			<div class="login-btn-div">
-				<input type="submit" value="Log In">
+				<button type="submit" :disabled="$wait.any">
+					<v-wait for="login">
+						<template slot="waiting">
+							<div class="loading">
+								<Loader />
+							</div>
+						</template>
+
+						<span >Log In</span>
+
+					</v-wait>
+				</button>
 			</div>
 
 			<div class="bottom-line">
@@ -41,9 +52,13 @@
 
 <script>
 import AuthAPI from '@/services/api/auth.js';
+import Loader from '@/components/utils/Loader.vue';
 
 export default {
 	name: 'Login',
+	components: {
+		Loader
+	},
 	data() {
 		return {
 			email: "",
@@ -64,7 +79,9 @@ export default {
         "password": this.password
 			}
 			try {
+				this.$wait.start('login');
 				await AuthAPI.login(data);
+				this.$wait.end('login');
 				this.error_message = "";
 				this.$router.push('/');
 			}
@@ -76,6 +93,9 @@ export default {
 				if (err.response.data.non_field_errors) { this.error_message = err.response.data.non_field_errors[0] }
 				else { this.error_message = "" }
 				if (err.response.data.detail) { this.error_message = "Unable to log in with provided credentials." }
+			}
+			finally {
+				this.$wait.end('login');
 			}
 			
 		}
@@ -102,7 +122,7 @@ export default {
 .textbox {
 	border-bottom: 2px solid #adadad;
 	position: relative;
-	margin: 10px 0;
+	margin: 15px 0;
 }
 
 .textbox input {
@@ -149,13 +169,15 @@ export default {
 }
 
 .login-btn-div {
-	margin-top: 30px;
+	position: relative;
+	margin-top: 40px;
 }
 
-.login-btn-div input{
+.login-btn-div button{
 	padding: 10px 50px;
 	background: gray;
 	border: none;
+	height: 40px;
 	color: white;
 	font-size: 16px;
 	width: 100%;
@@ -191,6 +213,14 @@ export default {
 	left: 0;
 	color: red;
 	font-size: 0.8rem;
+}
+
+.loading .loader {
+  border: 5px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 5px solid #3498db;
+  width: 20px;
+  height: 20px;
 }
 
 </style>
