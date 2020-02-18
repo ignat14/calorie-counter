@@ -1,7 +1,7 @@
 <template>
 	<div v-if="add_meal_modal" class="modal-dark-backround">
 
-		<div class="main-modal">
+		<form class="main-modal" @submit="createMealClick">
 			<h1>Add Meal</h1>
 			<i class="fas fa-times exit-modal" @click="exitModal()"></i>
 
@@ -23,6 +23,7 @@
 																class="date-picker-input"
 																:only-date="true"
 																label=""
+																:no-label="true"
 																format="YYYY-MM-DD"
 																formatted="ll"
 																:class="{'invalid-input': error_date}"
@@ -36,9 +37,10 @@
 					<VueCtkDateTimePicker v-model="new_meal.time"
 																class="time-picker-input"
 																:only-time="true"
-																label="Select Time"
-																format="HH:mm:ss"
-																formatted="hh:mm a"
+																label=""
+																:no-label="true"
+																format="HH:mm"
+																formatted="HH:mm"
 																:minuteInterval="10"
 																:class="{'invalid-input': error_time}"
 					></VueCtkDateTimePicker>
@@ -69,19 +71,36 @@
 					{{ success_message }}
 				</div>
 
-				<button @click="createMealClick()">Add Meal</button>
+				<button type="submit" :disabled="$wait.any">
+					<v-wait for="addMeal">
+						<template slot="waiting">
+							<div class="loading">
+								<Loader />
+							</div>
+						</template>
+
+						<span >Add Meal</span>
+
+					</v-wait>
+
+				</button>
+
 			</div>
 
-		</div>
+		</form>
 
 	</div>
 </template>
 
 <script>
+import Loader from '@/components/utils/Loader.vue';
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
 	name: "AddUserModal",
+	components: {
+		Loader
+	},
 	data() {
 		return {
 			new_meal: {
@@ -128,11 +147,15 @@ export default {
 			this.cleanNewMeal();
 			this.toggleAddMealModal(false);
 		},
-		createMealClick: async function() {
+		createMealClick: async function(e) {
+			e.preventDefault();
 			try {
+				this.$wait.start('addMeal');
 				await this.createMeal(this.new_meal);
+				this.$wait.end('addMeal');
 				this.success_message = "Meal added successfully";
 				this.cleanErrorMessages();
+				this.cleanNewMeal();
 			}
 			catch (err) {
 				if (err.response.data.user) { this.error_user = err.response.data.user[0]; }
@@ -149,6 +172,9 @@ export default {
 				else { this.error_message = "" }
 				
 				this.success_message = "";
+			}
+			finally {
+				this.$wait.end('addMeal');
 			}
 		},
 	},
@@ -194,6 +220,19 @@ button {
 .success-message {
 	margin: 10px;
 	color: green;
+}
+
+.loading .loader {
+  border: 5px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 5px solid #3498db;
+  width: 20px;
+  height: 20px;
+}
+
+button[type=submit] {
+	position: relative;
+	height: 40px;
 }
 
 </style>

@@ -10,7 +10,8 @@
 					<VueCtkDateTimePicker v-model="meal.date"
 																class="date-picker-input"
 																:only-date="true"
-																label="Select Date"
+																label="Select date"
+																:no-label="true"
 																format="YYYY-MM-DD"
 																formatted="ll"
 																:class="{'invalid-input': error_date}"
@@ -21,8 +22,9 @@
 																class="time-picker-input"
 																:only-time="true"
 																label="Select Time"
-																format="HH:mm:ss"
-																formatted="hh:mm a"
+																:no-label="true"
+																format="HH:mm"
+																formatted="HH:mm"
 																:minuteInterval="10"
 																:class="{'invalid-input': error_time}"
 					></VueCtkDateTimePicker>
@@ -292,4 +294,14 @@ export default {
 	color: green;
 }
 
+</style>
+
+
+<style>
+
+.time >>> .no-label {
+	background: red;
+	padding: 0;
+	padding-top: 0;
+}
 </style>

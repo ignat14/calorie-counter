@@ -22,6 +22,22 @@ const routes = [
     },
   },
   {
+    path: '/reset_password',
+    name: 'ResetPassword',
+    component: () => import('../views/ResetPassword.vue'),
+    meta: {
+      requires_auth: false,
+    },
+  },
+  {
+    path: '/reset_password/token/:token',
+    name: 'ResetPasswordToken',
+    component: () => import('../views/ResetPasswordToken.vue'),
+    meta: {
+      requires_auth: false,
+    },
+  },
+  {
     path: '/change_password',
     name: 'ChangePassword',
     component: () => import('../views/ChangePassword.vue'),
@@ -83,6 +99,7 @@ router.beforeEach(async (to, from, next) => {
 		}
   } 
   else if (to.matched.some(record => !record.meta.requires_auth)){
+    localStorage.removeItem("cc_token");
 		next();
   }
   else {

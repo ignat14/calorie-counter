@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    'django_rest_passwordreset',
     'accounts',
     'meals',
     'drf_yasg',
@@ -143,14 +144,14 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+SITE_DOMAIN = 'localhost'
+SITE_PORT = '8000'
+FRONTEND_DOMAIN = "0.0.0.0"
+FRONTEND_PORT = "8080"
 
 
-
-###### DELETE THIS
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.sendgrid.com'
-EMAIL_HOST_USER = 'apikey'
-EMAIL_HOST_PASSWORD = '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'
-DEFAULT_FROM_EMAIL = 'Calorie Counter <noreply@caloriecaunter.com>'
-SERVER_EMAIL = 'noreply@eyetea.mk'
+#import config from settings_local.py
+try:
+	from .settings_local import *
+except ImportError:
+	pass

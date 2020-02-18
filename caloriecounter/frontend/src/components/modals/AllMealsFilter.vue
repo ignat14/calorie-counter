@@ -19,10 +19,11 @@
 					<label for="date-range">Date Range</label>
 					<VueCtkDateTimePicker v-model="date_range"
 															class="date-picker-input"
+															label=""
+															:no-label="true"
 															format="YYYY-MM-DD"
 															formatted="ll"
 															:range="true"
-															label="Select date range"
 				></VueCtkDateTimePicker>
 				</div>
 
@@ -31,9 +32,10 @@
 					<VueCtkDateTimePicker v-model="time_from"
 																class="time-picker-input"
 																:only-time="true"
-																label="From"
-																format="HH:mm:ss"
-																formatted="hh:mm a"
+																label=""
+																:no-label="true"
+																format="HH:mm"
+																formatted="HH:mm"
 																:minuteInterval="10"
 					></VueCtkDateTimePicker>
 				</div>
@@ -43,9 +45,10 @@
 					<VueCtkDateTimePicker v-model="time_to"
 															class="time-picker-input"
 															:only-time="true"
-															label="To"
-															format="HH:mm:ss"
-															formatted="hh:mm a"
+															label=""
+															:no-label="true"
+															format="HH:mm"
+															formatted="HH:mm"
 															:minuteInterval="10"
 				></VueCtkDateTimePicker>
 				</div>

@@ -1,13 +1,16 @@
 from django.http import HttpResponse
 from django.shortcuts import redirect
-from rest_framework import generics, mixins
-from rest_framework import status
+from django.contrib.auth.password_validation import validate_password, get_password_validators
+from django.conf import settings
+from django.core.exceptions import ValidationError
+from rest_framework import generics, mixins, status, exceptions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
-from .serializers import UserSerializer, UserUpdateSerializer, ProfileSerializer, SignupUserSerializer
+from .serializers import UserSerializer, UserUpdateSerializer, ProfileSerializer, SignupUserSerializer, PasswordChangeSerializer
 from .models import User, Profile
 from accounts.permissions import IsAdmin, IsAdminOrManager
+from caloriecounter import settings as cc_settings
 
 from django.views.decorators.csrf import csrf_exempt
 
@@ -69,6 +72,39 @@ class Signup(generics.CreateAPIView):
 			"password2": self.request.data.get('password2')
 			}
 
+class PasswordChange(generics.UpdateAPIView):
+	serializer_class = PasswordChangeSerializer
+
+	def get_object(self):
+		return self.request.user
+		
+	def get_queryset(self):
+		return User.objects.get(user=self.request.user)
+
+	def update(self, request):
+		old_password = request.data['old_password']
+		new_password1 = request.data['new_password1']
+		new_password2 = request.data['new_password2']
+
+		if not request.user.check_password(old_password):
+			raise serializers.ValidationError({"old_password": ["The old password is incorect."]})
+		if new_password1 != new_password2:
+			raise serializers.ValidationError({"new_password2": ["The passwords did not match."]})
+		try:
+			validate_password(
+				new_password1,
+				user=request.user,
+				password_validators=get_password_validators(settings.AUTH_PASSWORD_VALIDATORS)
+			)
+		except ValidationError as e:
+			raise exceptions.ValidationError({
+				'new_password1': e.messages
+			})
+
+		request.user.set_password(request.data['new_password1'])
+		request.user.save()
+		return Response({"message": "Password save successfully"}, status=status.HTTP_200_OK)
+
 
 @csrf_exempt
 def activate(request, uidb64, token):
@@ -80,6 +116,6 @@ def activate(request, uidb64, token):
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
-        return redirect('http://0.0.0.0:8080/login')
+        return redirect(f'http://{cc_settings.FRONTEND_DOMAIN}:{cc_settings.FRONTEND_PORT}/login')
     else:
         return HttpResponse('Activation link is invalid!')

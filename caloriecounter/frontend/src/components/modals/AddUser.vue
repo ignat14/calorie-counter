@@ -1,7 +1,7 @@
 <template>
 	<div v-if="add_user_modal" class="modal-dark-backround">
 
-		<div class="main-modal">
+		<form class="main-modal" @submit="createUserClicked">
 			<h1>Add User</h1>
 			<i class="fas fa-times exit-modal" @click="exitModal()"></i>
 
@@ -50,18 +50,35 @@
 					{{ success_message }}
 				</div>
 
-				<button @click="createUserClicked()">Add User</button>
+				<button type="submit" :disabled="$wait.any">
+					<v-wait for="createUser">
+						<template slot="waiting">
+							<div class="loading">
+								<Loader />
+							</div>
+						</template>
+
+						<span >Add User</span>
+
+					</v-wait>
+
+				</button>
 			</div>
 
-		</div>
+		</form>
 
 	</div>
 </template>
 
 <script>
+import Loader from '@/components/utils/Loader.vue';
 import { mapGetters, mapActions } from 'vuex';
+
 export default {
 	name: "AddUserModal",
+	components: {
+		Loader
+	},
 	data() {
 		return {
 			email: "",
@@ -81,8 +98,7 @@ export default {
 	},
 	methods: {
 		...mapActions(['toggleAddUserModal', 'createUser']),
-		exitModal: function() {
-			this.toggleAddUserModal(false);
+		clearForm: function() {
 			this.email = "";
 			this.password1 = "";
 			this.password2 = "";
@@ -94,7 +110,12 @@ export default {
 			this.error_password2 = "";
 			this.error_permission = "";
 		},
-		createUserClicked: async function() {
+		exitModal: function() {
+			this.toggleAddUserModal(false);
+			this.clearForm();
+		},
+		createUserClicked: async function(e) {
+			e.preventDefault();
 			let data = {
 				"email": this.email,
 				"password1": this.password1,
@@ -105,13 +126,12 @@ export default {
 			}
 
 			try {
+				this.$wait.start('createUser');
 				await this.createUser(data);
-				this.success_message = "User created successfuly. Verification email sent to " + this.email;
-				this.error_message = "";
-				this.error_email = "";
-				this.error_password1 = "";
-				this.error_password2 = "";
-				this.error_permission = "";
+				this.$wait.end('createUser');
+				let success_message = "User created successfuly. Verification email sent to " + this.email;
+				this.clearForm();
+				this.success_message = success_message;
 			}
 			catch(err) {				
 				if (err.response.data.email) { this.error_email = err.response.data.email[0]; }
@@ -126,6 +146,10 @@ export default {
 				else { this.error_message = "" }
 				
 				this.success_message = "";
+				
+			}
+			finally {
+				this.$wait.end('createUser');
 			}
 			
 		}
@@ -154,6 +178,19 @@ export default {
 .success-message {
 	margin: 10px;
 	color: green;
+}
+
+.loading .loader {
+  border: 5px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 5px solid #3498db;
+  width: 20px;
+  height: 20px;
+}
+
+button[type=submit] {
+	position: relative;
+	height: 40px;
 }
 
 </style>

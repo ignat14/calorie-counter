@@ -4,8 +4,8 @@
 		<span class="input-wrapper">
 			<VueCtkDateTimePicker v-model="meal.time"
 														:only-time="true"
-														format="HH:mm:ss"
-														formatted="hh:mm a"
+														format="HH:mm"
+														formatted="HH:mm"
 														:minuteInterval="10"
 														@validate="patchTime()"
 														@is-hidden="patchTime()"

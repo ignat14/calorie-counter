@@ -57,7 +57,7 @@ export default new Vuex.Store({
     },
     logout({commit}) {
       authAPI.logOut();
-      localStorage.removeItem("drf_token");
+      localStorage.removeItem("cc_token");
       commit('clearUser');
     }
   },

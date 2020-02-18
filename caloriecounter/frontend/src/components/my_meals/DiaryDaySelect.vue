@@ -35,8 +35,7 @@ export default {
 			const today_str = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
 			const tomorrow_str = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+(today.getDate()+1);
 			const yesterday_str = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+(today.getDate()-1);
-			console.log(today_str);
-			
+
 			if (this.current_date == today_str) {
 				return "Today";
 			}
@@ -62,14 +61,12 @@ export default {
 			let date = new Date(this.current_date);		
 			let yesterday = date.getDate() - 1
 			this.current_date = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+yesterday;
-			console.log(this.current_date);
 			this.$emit('input', this.current_date);
 		},
 		go_right: function() {
 			let date = new Date(this.current_date);		
 			let yesterday = date.getDate() + 1
 			this.current_date = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+yesterday;
-			console.log(this.current_date);
 			this.$emit('input', this.current_date);
 		},
 	},

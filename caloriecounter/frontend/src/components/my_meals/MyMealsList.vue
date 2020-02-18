@@ -1,76 +1,90 @@
 <template>
 	<div class="my-meals-wrapper">
 
-		<div class="meals-list">
-			<div class="main-settings-menu">
 
-				<DiaryDaySelect v-model="current_date" v-if="!show_filters" />
+		<v-wait for="my list is to load">
+			<template slot="waiting">
+				<div class="loading">
+					<Loader />
+				</div>
+			</template>
+		</v-wait>
 
-				<div class="open-modal-icon filter" @click="toggleFilters()">
-						<i class="fas fa-sliders-h" v-if="!show_filters"></i>
-						<i class="far fa-calendar-check" v-if="show_filters"></i>
+			<div class="meals-list">
+				<div class="main-settings-menu">
+
+					<DiaryDaySelect v-model="current_date" v-if="!show_filters" />
+
+					<div class="open-modal-icon filter" @click="toggleFilters()">
+							<i class="fas fa-sliders-h" v-if="!show_filters"></i>
+							<i class="far fa-calendar-check" v-if="show_filters"></i>
+					</div>
+
+				<div class="datetime-filters" v-if="show_filters">
+					<div class="date-range" data-label="Date Range">
+						<VueCtkDateTimePicker v-model="date_range"
+																	class="date-picker-input"
+																	format="YYYY-MM-DD"
+																	formatted="ll"
+																	:range="true"
+																	label="Select date range"
+																	:no-label="true"
+																	@input="dateRangeChange()"
+																	@validate="fetchMyMeals(params)"
+																	@is-hidden="fetchMyMeals(params)"
+						></VueCtkDateTimePicker>
+					</div>
+					<div class="time-range" data-label="Time Range">
+						<VueCtkDateTimePicker v-model="time_from"
+																	class="time-picker-input"
+																	:only-time="true"
+																	label="From"
+																	:no-label="true"
+																	format="HH:mm"
+																	formatted="HH:mm"
+																	:minuteInterval="10"
+																	@input="timeFromChange()"
+																	@validate="fetchMyMeals(params)"
+																	@is-hidden="fetchMyMeals(params)"
+						></VueCtkDateTimePicker> <span>-</span>
+						<VueCtkDateTimePicker v-model="time_to"
+																	class="time-picker-input"
+																	:only-time="true"
+																	label="To"
+																	:no-label="true"
+																	format="HH:mm"
+																	formatted="HH:mm"
+																	:minuteInterval="10"
+																	@input="timeToChange()"
+																	@validate="fetchMyMeals(params)"
+																	@is-hidden="fetchMyMeals(params)"
+						></VueCtkDateTimePicker>
+					</div>
 				</div>
 
-			<div class="datetime-filters" v-if="show_filters">
-				<div class="date-range" data-label="Date Range">
-					<VueCtkDateTimePicker v-model="date_range"
-																class="date-picker-input"
-																format="YYYY-MM-DD"
-																formatted="ll"
-																:range="true"
-																label="Select date range"
-																@input="dateRangeChange()"
-																@validate="fetchMyMeals(params)"
-																@is-hidden="fetchMyMeals(params)"
-					></VueCtkDateTimePicker>
+
+					<div class="count-calories">
+						<h1 :class="{'green': calories_balance && !show_filters, 
+												'red': !calories_balance && !show_filters, 
+												'gray': !expected_calories || show_filters}">
+							{{ all_calories }}<span v-if="!expected_calories || show_filters">Cals</span>
+						</h1>
+						<h4 v-if="expected_calories && !show_filters">
+							/ {{ expected_calories }} Cals
+						</h4>
+					</div>
+
 				</div>
-				<div class="time-range" data-label="Time Range">
-					<VueCtkDateTimePicker v-model="time_from"
-																class="time-picker-input"
-																:only-time="true"
-																label="From"
-																format="HH:mm:ss"
-																formatted="hh:mm a"
-																:minuteInterval="10"
-																@input="timeFromChange()"
-																@validate="fetchMyMeals(params)"
-																@is-hidden="fetchMyMeals(params)"
-					></VueCtkDateTimePicker> <span>-</span>
-					<VueCtkDateTimePicker v-model="time_to"
-																class="time-picker-input"
-																:only-time="true"
-																label="To"
-																format="HH:mm:ss"
-																formatted="hh:mm a"
-																:minuteInterval="10"
-																@input="timeToChange()"
-																@validate="fetchMyMeals(params)"
-																@is-hidden="fetchMyMeals(params)"
-					></VueCtkDateTimePicker>
+
+				<div v-for="meal in my_meals" :key="meal.id">
+					<MyMeal :meal="meal" @deleteMeal="deleteMeal"/>
 				</div>
+
+				<AddMeal :current_date="current_date" @addNewMeal="addNewMeal" v-if="!show_filters" />
+
 			</div>
 
-
-				<div class="count-calories">
-					<h1 :class="{'green': calories_balance && !show_filters, 
-											'red': !calories_balance && !show_filters, 
-											'gray': !expected_calories || show_filters}">
-						{{ all_calories }}<span v-if="!expected_calories || show_filters">Cals</span>
-					</h1>
-					<h4 v-if="expected_calories && !show_filters">
-						/ {{ expected_calories }} Cals
-					</h4>
-				</div>
-
-			</div>
-
-			<div v-for="meal in my_meals" :key="meal.id">
-				<MyMeal :meal="meal" @deleteMeal="deleteMeal"/>
-			</div>
-
-			<AddMeal :current_date="current_date" @addNewMeal="addNewMeal" v-if="!show_filters" />
-
-		</div>
+		
 
 	</div>
 </template>
@@ -80,6 +94,7 @@ import MyMealsAPI from '@/services/api/my_meals.js';
 import MyMeal from '@/components/my_meals/MyMeal.vue';
 import DiaryDaySelect from '@/components/my_meals/DiaryDaySelect.vue';
 import AddMeal from '@/components/my_meals/AddMeal.vue';
+import Loader from '@/components/utils/Loader.vue';
 import { mapGetters } from "vuex";
 
 export default {
@@ -87,7 +102,8 @@ export default {
 	components: {
 		DiaryDaySelect,
 		MyMeal,
-		AddMeal
+		AddMeal,
+		Loader
 	},
 	data() {
 		return {
@@ -114,7 +130,10 @@ export default {
 			return count_cals
 		},
 		expected_calories: function() {
-			return this.logged_user.profile.expected_calories_per_day;
+			if (this.logged_user.profile) {
+				return this.logged_user.profile.expected_calories_per_day;
+			}
+			else return 0
 		},
 		calories_balance: function() {
 			return this.expected_calories / this.all_calories  > 1;
@@ -190,12 +209,14 @@ export default {
 		}
 	},
 	watch: {
-		current_date: function() {
+		current_date: async function() {
 			this.params = {
 				"date_from": this.current_date,
 				"date_to": this.current_date
 			}
-			this.fetchMyMeals();
+			this.$wait.start('my list is to load');
+			await this.fetchMyMeals();
+			this.$wait.end('my list is to load');
 		}
 	},
 	created() {
@@ -206,7 +227,6 @@ export default {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css?family=Odibee+Sans&display=swap');
 .my-meals-wrapper {
 	display: flex;
 	justify-content: space-around;
@@ -294,6 +314,13 @@ export default {
 	.date-range {
 		margin-right: 20px;
 	}
+}
+
+.loading {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 }
 
 </style>

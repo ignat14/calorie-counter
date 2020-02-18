@@ -16,6 +16,7 @@
     "vue-ctk-date-time-picker": "^2.4.0",
     "vue-mq": "^1.0.1",
     "vue-router": "^3.1.5",
+    "vue-wait": "^1.4.8",
     "vuex": "^3.1.2"
   },
   "devDependencies": {

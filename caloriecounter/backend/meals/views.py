@@ -14,7 +14,7 @@ class MyMealsAPIView(mixins.CreateModelMixin, generics.ListAPIView):
 	def get_queryset(self):
 		qs = Meal.objects.filter(user=self.request.user)
 		params = self.request.GET
-		qs = filter_meals(params, qs)
+		qs = filter_meals(params, qs).order_by('time')
 		return qs
 
 	def perform_create(self, serializer):
@@ -29,10 +29,8 @@ class MyMealsRudView(generics.RetrieveUpdateDestroyAPIView):
 	serializer_class = MyMealsSerializer
 
 	def get_queryset(self):
-		return Meal.objects.filter(user=self.request.user)
-
-
-
+		qs = Meal.objects.filter(user=self.request.user)
+		return qs
 
 
 class AllMealsAPIView(mixins.CreateModelMixin, generics.ListAPIView):
@@ -42,7 +40,7 @@ class AllMealsAPIView(mixins.CreateModelMixin, generics.ListAPIView):
 	def get_queryset(self):
 		qs = Meal.objects.all()
 		params = self.request.GET
-		qs = filter_meals(params, qs)
+		qs = filter_meals(params, qs).order_by('time').order_by('date')
 		return qs
 
 	def post(self, request, *args, **kwargs):

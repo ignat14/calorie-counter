@@ -1,10 +1,14 @@
-from rest_framework import serializers
-from .models import User, Profile
+from django.contrib.auth.password_validation import validate_password, get_password_validators
+from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from rest_framework import serializers
+from caloriecounter import settings as cc_settings
 from .tokens import account_activation_token
+from .models import User, Profile
 
 class ProfileSerializer(serializers.ModelSerializer):
 
@@ -42,6 +46,9 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 		model = User
 		fields = ['id', 'email', 'permission', 'profile']
 		read_only_fields = ['id']
+		extra_kwargs = {
+            'permission': {'required': False}
+        }
 
 	def validate_permission(self, new_permission):
 		self_user = self.context.get('request').user
@@ -54,6 +61,14 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 		if own_permission != 'ADMIN' and old_permission == 'ADMIN' and new_permission != 'ADMIN':
 			raise serializers.ValidationError(f"{own_permission}S don't have permission to downgrade from ADMIN")
 		return new_permission
+
+class PasswordChangeSerializer(serializers.Serializer):
+	old_password = serializers.CharField(required=True)
+	new_password1 = serializers.CharField(required=True)
+	new_password2 = serializers.CharField(required=True)
+
+	class Meta:
+		fields = ['old_password', 'new_password1', 'new_password2']
 
 
 class SignupUserSerializer(serializers.ModelSerializer):
@@ -93,13 +108,14 @@ class SignupUserSerializer(serializers.ModelSerializer):
 			permission=permission,
 			is_active=False
 		)
-		user.set_password(self.context.get('password'))
+
+		user.set_password(self.context.get('password2'))
 		user.save()
 
 		mail_subject = "Please Activate your account"
 		message = render_to_string('activate_email.html', {
 			'user': user,
-			'domain': "localhost:8000",
+			'domain': f"{cc_settings.SITE_DOMAIN}:{cc_settings.SITE_PORT}",
 			'uid':urlsafe_base64_encode(force_bytes(user.pk)),
 			'token':account_activation_token.make_token(user),
 		})

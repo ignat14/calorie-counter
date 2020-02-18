@@ -1,18 +1,8 @@
 <template>
   <div class="login">
-		<form id="login-form" @submit="login">
+		<form id="login-form" @submit="resetPassword">
 
 			<h1>Calorie Counter</h1>
-
-			<div class="textbox" :class="{'is-invalid': error_email}">
-				<input type="text"
-								v-model="email"
-								@focus="email_focused = true"
-								@blur="email_focused = false"
-								:class="{'focus': email || email_focused}">
-				<span data-placeholder="Email"></span>
-				<div v-if="error_email" class="error-msg">{{error_email}}</div>
-			</div>
 
 			<div class="textbox" :class="{'is-invalid': error_password1}">
 				<input type="password"
@@ -20,7 +10,7 @@
 								:class="{'focus': password1 || password1_focused}"
 								@focus="password1_focused = true"
 								@blur="password1_focused = false">
-				<span data-placeholder="Password"></span>
+				<span data-placeholder="New Password"></span>
 				<div v-if="error_password1" class="error-msg">{{error_password1}}</div>
 			</div>
 
@@ -34,30 +24,30 @@
 				<div v-if="error_password2" class="error-msg">{{error_password2}}</div>
 			</div>
 
-			<div class="error-message">
-				{{ error_message }}
-			</div>
 			<div class="success-message">
 				{{ success_message }}
+			</div>
+			<div class="error-message">
+				{{ error_message }}
 			</div>
 
 			<div class="login-btn-div">
 				<button type="submit" :disabled="$wait.any">
-					<v-wait for="signup">
+					<v-wait for="resetPassword">
 						<template slot="waiting">
 							<div class="loading">
 								<Loader />
 							</div>
 						</template>
 
-						<span >Sign Up</span>
+						<span >Reset Password</span>
 
 					</v-wait>
 				</button>
 			</div>
 
 			<div class="bottom-line">
-				<span>Already have an account?</span> <router-link to="/login">Log In</router-link>
+				Don't need to reset password? <router-link to="/login">Log In</router-link>
 			</div>
 
 		</form>
@@ -65,66 +55,71 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
-import AuthApi from '@/services/api/auth.js';
+import AuthAPI from '@/services/api/auth.js';
 import Loader from '@/components/utils/Loader.vue';
+import { mapActions } from "vuex";
 
 export default {
-	name: 'Login',
+	name: 'ResetPasswordToken',
 	components: {
 		Loader
 	},
 	data() {
 		return {
-			email: "",
 			password1: "",
 			password2: "",
-			email_focused: false,
 			password1_focused: false,
 			password2_focused: false,
-			error_message: "",
 			success_message: "",
-			error_email: "",
+			error_message: "",
 			error_password1: "",
 			error_password2: ""
 		};
 	},
 	methods: {
 		...mapActions(['fetchUser']),
-		login: async function(e) {
+		resetPassword: async function(e) {
 			e.preventDefault();
-			let data = {
-        "email": this.email,
-				"password1": this.password1,
-				"password2": this.password2
-			}
-			try {
-				this.$wait.start('signup');
-				await AuthApi.signUp(data);
-				this.$wait.end('signup');
-				this.success_message = "Activation Email sent. Please verify before log in";
+
+			if (this.password1 != this.password2) {
+				this.error_password2 = "The passwords did not match."
+				this.error_password1 = "";
 				this.error_message = "";
-				this.error_email = "";
+				this.success_message = "";
+				return
+			}
+			
+			try {
+				this.$wait.start('resetPassword');
+				await AuthAPI.resetPasswordConfirm({"token": this.$route.params.token, "password": this.password2});
+				this.$wait.end('resetPassword');
+				this.success_message = "Password Reset Successfully"
+				this.error_message = "";
 				this.error_password1 = "";
 				this.error_password2 = "";
+				this.clearSuccessNotificationAndRedirect();
 			}
 			catch(err) {
-				if (err.response.data.email) { this.error_email = err.response.data.email[0]; }
-				else { this.error_email = "" }
-				if (err.response.data.password1) { this.error_password1 = err.response.data.password1[0]; }
-				else { this.error_password1 = ""}
-				if (err.response.data.password2) { this.error_password2 = err.response.data.password2[0]; }
-				else { this.error_password2 = ""}
-				if (err.response.data.non_field_errors) { this.error_message = err.response.data.non_field_errors[0] }
+				if (err.response.data.password) { this.error_password1 = err.response.data.password[0]; }
+				else { this.error_password1 = "" }
+				if (err.response.data.status) { this.error_message = "This link is no longer valid" }
 				else { this.error_message = "" }
-				
 				this.success_message = "";
 			}
 			finally {
-				this.$wait.end('signup');
+				this.$wait.end('resetPassword');
 			}
 			
-		}
+		},
+		clearSuccessNotificationAndRedirect: function() {
+			setTimeout(() => {
+					this.success_message = "";
+					this.$router.push('/login');
+				}, 2000);
+		},
+	},
+	created() {
+		// VALIDATE TOKEN
 	}
 }
 </script>
@@ -202,9 +197,9 @@ export default {
 
 .login-btn-div button{
 	padding: 10px 50px;
-	height: 40px;
 	background: gray;
 	border: none;
+	height: 40px;
 	color: white;
 	font-size: 16px;
 	width: 100%;
@@ -226,11 +221,6 @@ export default {
 	color: red;
 }
 
-.success-message {
-	margin: 30px;
-	color: green;
-}
-
 a {
 	font-weight: bold;
 }
@@ -245,6 +235,16 @@ a {
 	left: 0;
 	color: red;
 	font-size: 0.8rem;
+}
+
+.error-message {
+	margin: 10px;
+	color: red;
+}
+
+.success-message {
+	margin: 10px;
+	color: green;
 }
 
 .loading .loader {

@@ -3,14 +3,14 @@
 		<div class="main-settings-menu">
 			<h1>Settings</h1>
 		</div>
-		<div class="settings-list">
+		<form class="settings-list" @submit="patchProfile">
 			<div class="settings-item">
 				<label for="expected_calories">Expected Calories Per Day</label>
 				<input type="number" name="expected_calories"
 								v-model.number="expected_calories">
 			</div>
 
-			<button @click="patchProfile()">
+			<button type="submit">
 				Save
 			</button>
 
@@ -22,7 +22,7 @@
 				{{ error_message }}
 			</div>
 
-		</div>
+		</form>
 	</div>
 </template>
 
@@ -47,7 +47,8 @@ export default {
 			let response = await UsersAPI.getProfile(this.logged_user.id);
 			this.expected_calories = response.data.expected_calories_per_day;
 		},
-		patchProfile: async function() {
+		patchProfile: async function(e) {
+			e.preventDefault();
 			try {
 				await UsersAPI.patchProfile(this.logged_user.id, this.expected_calories);
 				this.success_message = "Updated";

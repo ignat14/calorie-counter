@@ -5,7 +5,7 @@
 			<h1>Calorie Counter</h1>
 
 			<div class="textbox" :class="{'is-invalid': error_email}">
-				<input type="text"
+				<input type="email"
 								v-model="email"
 								:class="{'focus': email || email_focused}"
 								@focus="email_focused = true"
@@ -32,7 +32,7 @@
 			</div>
 
 			<div class="bottom-line">
-				<span>Don't have an account?</span> <router-link to="/signup">Sign Up</router-link>
+				<router-link to="/reset_password">Forgot Password?</router-link> | <router-link to="/signup">Sign Up</router-link>
 			</div>
 
 		</form>
@@ -40,9 +40,7 @@
 </template>
 
 <script>
-import axios from 'axios';
-import { mapActions } from "vuex";
-// import router from '@/router/index.js';
+import AuthAPI from '@/services/api/auth.js';
 
 export default {
 	name: 'Login',
@@ -58,7 +56,6 @@ export default {
 		};
 	},
 	methods: {
-		...mapActions(['fetchUser']),
 		login: async function(e) {
 			e.preventDefault();
 
@@ -67,10 +64,8 @@ export default {
         "password": this.password
 			}
 			try {
-				let response = await axios.post('http://localhost:8000/api/auth/login', data);
-				localStorage.drf_token = response.data.token;
+				await AuthAPI.login(data);
 				this.error_message = "";
-				await this.fetchUser();
 				this.$router.push('/');
 			}
 			catch(err) {
@@ -80,6 +75,7 @@ export default {
 				else { this.error_password = ""}
 				if (err.response.data.non_field_errors) { this.error_message = err.response.data.non_field_errors[0] }
 				else { this.error_message = "" }
+				if (err.response.data.detail) { this.error_message = "Unable to log in with provided credentials." }
 			}
 			
 		}
@@ -181,9 +177,9 @@ export default {
 	color: red;
 }
 
-a {
+/* a {
 	font-weight: bold;
-}
+} */
 
 .is-invalid {
 	border-bottom: 2px solid red;

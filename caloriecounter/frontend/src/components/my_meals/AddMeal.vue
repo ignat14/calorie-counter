@@ -1,38 +1,44 @@
 <template>
 	<div class="add-meal">
-		<div class="meal-box">
+		<form @submit="addMeal">
+
+			<div class="meal-box">
+					<span class="input-wrapper">
+						<VueCtkDateTimePicker v-model="new_meal.time"
+																	:only-time="true"
+																	format="HH:mm"
+																	formatted="HH:mm"
+																	:minuteInterval="10">
+							<input v-model="new_meal.time" class="meal-input time-input" type="text" 
+										placeholder="Add time" readonly :class="{'is-invalid': time_errors}">
+						</VueCtkDateTimePicker>
+						<div v-if="time_errors" class="error-msg">This value is invalid</div>
+					</span>
+					<span class="input-wrapper">
+						<input type="text" 
+										class="meal-input"
+										v-model="new_meal.description"
+										placeholder="Add description"
+										:class="{'is-invalid': description_errors}">
+						<div v-if="description_errors" class="error-msg">This value is invalid</div>
+					</span>
+
+				<span class="input-wrapper">
+					<input type="number" 
+									class="meal-input" 
+									v-model.number="new_meal.calories" 
+									placeholder="Add Calories"
+									:class="{'is-invalid': calories_errors}">
+					<div v-if="calories_errors" class="error-msg">This value is invalid</div>
+				</span>
+
+				<button type="submit">
+					<i class="fas fa-check add-icon"></i>
+				</button>
 				
-				<span class="input-wrapper">
-					<VueCtkDateTimePicker v-model="new_meal.time"
-																:only-time="true"
-																format="HH:mm:ss"
-																formatted="hh:mm a"
-																:minuteInterval="10">
-						<input v-model="new_meal.time" class="meal-input time-input" type="text" 
-									placeholder="Add time" readonly :class="{'is-invalid': time_errors}">
-					</VueCtkDateTimePicker>
-					<div v-if="time_errors" class="error-msg">This value is invalid</div>
-				</span>
-				<span class="input-wrapper">
-					<input type="text" 
-									class="meal-input"
-									v-model="new_meal.description"
-									placeholder="Add description"
-									:class="{'is-invalid': description_errors}">
-					<div v-if="description_errors" class="error-msg">This value is invalid</div>
-				</span>
+			</div>
 
-			<span class="input-wrapper">
-				<input type="number" 
-								class="meal-input" 
-								v-model.number="new_meal.calories" 
-								placeholder="Add Calories"
-								:class="{'is-invalid': calories_errors}">
-				<div v-if="calories_errors" class="error-msg">This value is invalid</div>
-			</span>
-
-			<i class="fas fa-check add-icon" @click="addMeal"></i>
-		</div>
+		</form>
 	</div>
 </template>
 
@@ -59,8 +65,11 @@ export default {
 		};
 	},
 	methods: {
-		addMeal: async function() {
+		addMeal: async function(e) {
+			e.preventDefault();
+
 			try {
+				this.new_meal.date = this.current_date;
 				let response = await MyMealsAPI.createMyMeal(this.new_meal);
 				this.$emit('addNewMeal', response.data);
 				this.clearNewMeal();
@@ -127,6 +136,12 @@ export default {
 	left: 5%;
 	color: red;
 	font-size: 0.8rem;
+}
+
+button[type=submit] {
+	background: none;
+	border: none;
+	outline: none;
 }
 
 </style>

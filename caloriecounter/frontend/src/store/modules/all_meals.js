@@ -20,8 +20,6 @@ const actions = {
 	},
 	async createMeal({ commit }, meal) {
 		let response = await AllMealsAPI.createMeal(meal);
-		console.log(response.data);
-		
 		commit('createMeal', response.data);
 	}
 }

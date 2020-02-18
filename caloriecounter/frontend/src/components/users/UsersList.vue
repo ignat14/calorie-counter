@@ -1,19 +1,32 @@
 <template>
 	<div>
+		<v-wait for="my list is to load">
+			<template slot="waiting">
+				<div class="loading">
+					<Loader />
+				</div>
+			</template>
+		</v-wait>
+		
 		<div v-for="user in all_users" :key="user.id">
 			<User :user="user" @deleteUser="deleteUser"/>
 		</div>
+
+
+
 	</div>
 </template>
 
 <script>
 import User from '@/components/users/User.vue';
+import Loader from '@/components/utils/Loader.vue';
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
 	name: "UsersList",
 	components: {
-		User
+		User,
+		Loader
 	},
 	computed: {
 		...mapGetters(['all_users'])
@@ -29,12 +42,19 @@ export default {
 			}
 		}
 	},
-	created: function() {
-		this.fetchAllUsers();
+	created: async function() {
+		this.$wait.start('my list is to load');
+		await this.fetchAllUsers();
+		this.$wait.end('my list is to load');
 	}
 }
 </script>
 
-<style>
-
+<style scoped>
+.loading {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
 </style>

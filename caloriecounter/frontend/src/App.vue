@@ -1,9 +1,9 @@
 <template>
   <div id="app">
-    <HeaderMain v-if="$route.path !== '/login' && $route.path !== '/signup'" />
-    <SideMenu v-if="$route.path !== '/login' && $route.path !== '/signup'" />
-    <SideMenuMobile />
-    <AccountMenuMobile />
+    <HeaderMain v-if="logged_user.id" />
+    <SideMenu v-if="logged_user.id" />
+    <SideMenuMobile v-if="logged_user.id"/>
+    <AccountMenuMobile v-if="logged_user.id"/>
     <router-view class="main-view" />
   </div>
 </template>
@@ -13,6 +13,7 @@ import HeaderMain from '@/components/HeaderMain.vue';
 import SideMenu from '@/components/menus/SideMenu.vue';
 import SideMenuMobile from '@/components/menus/SideMenuMobile.vue';
 import AccountMenuMobile from '@/components/menus/AccountMenuMobile.vue';
+import { mapGetters } from 'vuex';
 
 export default {
 	name: 'MyMealsList',
@@ -21,12 +22,14 @@ export default {
     SideMenu,
     SideMenuMobile,
     AccountMenuMobile
-  }
+	},
+	computed: {
+		...mapGetters(['logged_user'])
+	}
 }
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css?family=Dancing+Script&display=swap');
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -71,6 +74,13 @@ input {
   .main-settings-menu {
     top: 50px;
   }
+}
+
+.loading {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 }
 
 </style>
@@ -204,7 +214,8 @@ input {
 }
 
 .modal-form-item > input {
-	padding: 7px 0;
+	padding: 7px 7px;
+	width: 90%;
 }
 
 .modal-form-item > select {
