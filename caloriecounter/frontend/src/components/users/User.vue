@@ -2,7 +2,8 @@
 	<div class="user-main">
 
 		<div class="user-title">
-			<span>{{user.email}}</span>
+			<span>{{user.email}}</span> 
+			<span v-if="!user.is_active" class="not-active"> (Not Active)</span>
 		</div>
 
 
@@ -167,6 +168,11 @@ export default {
 
 .btn-wrapper {
 	position: relative;
+}
+
+.not-active {
+	color: gray;
+	font-size: 1.1rem;
 }
 
 @media (max-width: 420px) {
