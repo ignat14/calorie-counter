@@ -2,7 +2,10 @@ import axios from 'axios';
 import settings from '@/settings';
 
 export default {
-	getLoggedUser: async () => await axios.get(`http://${settings.backend_domain}:${settings.backend_port}/api/users/self`),
+	async getLoggedUser() {
+		let response = await axios.get(`http://${settings.backend_domain}:${settings.backend_port}/api/users/self`);
+		return response;
+	},
 	async login(data) {
 		let response = await axios.post(`http://${settings.backend_domain}:${settings.backend_port}/api/auth/login/`, data);
 		localStorage.cc_token = response.data.token;

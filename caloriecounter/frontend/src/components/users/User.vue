@@ -38,8 +38,14 @@
 			<span class="btn-wrapper">
 				<button class="delete" @click="show_delete_dialog = !show_delete_dialog">Delete</button>
 				<ConfirmDialog
-					v-if="show_delete_dialog"
+					v-if="show_delete_dialog && !own_user"
 					text="Are you sure you want to delete this user?"
+					@yes="deleteUser()"
+					@no="show_delete_dialog = false" 
+				/>
+				<ConfirmDialog
+					v-if="show_delete_dialog && own_user"
+					text="THIS IS YOUR OWN USER. Are you sure you want to delete it? You will be immediately logged out!"
 					@yes="deleteUser()"
 					@no="show_delete_dialog = false" 
 				/>
@@ -59,6 +65,7 @@
 <script>
 import UsersAPI from '@/services/api/users.js';
 import ConfirmDialog from '@/components/utils/ConfirmDialog.vue';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
 	name: "User",
@@ -78,7 +85,14 @@ export default {
 			error_permission: ""
 		}
 	},
+	computed: {
+		...mapGetters(['logged_user']),
+		own_user: function() {
+			return this.logged_user.id == this.user.id
+		}
+	},
 	methods: {
+		...mapActions(['logout']),
 		saveUser: async function() {
 			try {
 				await UsersAPI.updateUser(this.user.id, this.user);
@@ -104,9 +118,15 @@ export default {
 				this.show_save_dialog = false;
 			}
 		},
-		deleteUser: function() {
-		UsersAPI.deleteUser(this.user.id);
-		this.$emit('deleteUser', this.user.id);
+		deleteUser: async function() {
+			if (this.own_user) {
+				await UsersAPI.deleteUser(this.user.id);
+				this.logout();
+			}
+			else {
+				await UsersAPI.deleteUser(this.user.id);
+				this.$emit('deleteUser', this.user.id);
+			}
 		},
 		clearSuccessMessages: function() {
 			setTimeout(() => {
