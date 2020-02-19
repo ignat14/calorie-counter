@@ -133,6 +133,9 @@ class SignupUserSerializer(serializers.ModelSerializer):
 		to_email = validated_data['email']
 
 		email = EmailMessage(mail_subject, message, to=[to_email])
-		email.send()
+		try:
+			email.send()
+		except:
+			raise serializers.ValidationError({"non_field_errors":["Coudn't send email. Please contact suport."]})
 
 		return user

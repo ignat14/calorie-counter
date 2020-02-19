@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db.models.signals import post_save 
 from django.dispatch import receiver
 from django.core.mail import EmailMultiAlternatives
+from django.core.exceptions import ValidationError
 from django_rest_passwordreset.signals import reset_password_token_created
 from django.template.loader import render_to_string
 from django.urls import reverse
@@ -110,4 +111,7 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
         [reset_password_token.user.email]
     )
     msg.attach_alternative(email_html_message, "text/html")
-    msg.send()
+    try:
+        msg.send()
+    except:
+        raise ValidationError({"non_field_errors": ["Cound't send email. Please contact support"]})
