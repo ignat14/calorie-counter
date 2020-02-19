@@ -2,4 +2,4 @@
 db.sqlite3
 *.py[cod]
 __pycache__/
-backend/caloriecounter/settings_local.py
+settings_local.py
