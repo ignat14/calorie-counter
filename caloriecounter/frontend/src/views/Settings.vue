@@ -44,13 +44,13 @@ export default {
 	},
 	methods: {
 		getProfile: async function() {
-			let response = await UsersAPI.getProfile(this.logged_user.id);
+			let response = await UsersAPI.getProfile();
 			this.expected_calories = response.data.expected_calories_per_day;
 		},
 		patchProfile: async function(e) {
 			e.preventDefault();
 			try {
-				await UsersAPI.patchProfile(this.logged_user.id, this.expected_calories);
+				await UsersAPI.patchProfile(this.expected_calories);
 				this.success_message = "Updated";
 				this.error_message = "";
 				this.clearMessages();

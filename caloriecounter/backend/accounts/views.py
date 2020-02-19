@@ -57,11 +57,11 @@ class SelfUserRudView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class ProfileRudView(generics.RetrieveUpdateAPIView):
-	"""API view for retrieving, updating and deleting profile information."""
+	"""API view for retrieving and updating own profile information."""
 	serializer_class = ProfileSerializer
 
 	def get_object(self):
-		return Profile.objects.get(user_id=self.kwargs.get('pk'))
+		return Profile.objects.get(user=self.request.user)
 	
 
 class Logout(APIView):
@@ -102,6 +102,9 @@ class PasswordChange(generics.UpdateAPIView):
 		return User.objects.get(user=self.request.user)
 
 	def update(self, request):
+		"""
+		TODO: Separate validations in own method
+		"""
 		old_password = request.data['old_password']
 		new_password1 = request.data['new_password1']
 		new_password2 = request.data['new_password2']

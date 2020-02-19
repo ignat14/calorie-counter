@@ -19,12 +19,12 @@ export default {
 		return response;
 	},
 	
-	async getProfile(id) {
-		let response = await axios.get(`http://${settings.backend_domain}:${settings.backend_port}/api/users/${id}/profile`);
+	async getProfile() {
+		let response = await axios.get(`http://${settings.backend_domain}:${settings.backend_port}/api/users/self/profile`);
 		return response;
 	},
-	async patchProfile(id, expected_calories_per_day) {
-		await axios.patch(`http://${settings.backend_domain}:${settings.backend_port}/api/users/${id}/profile`, {expected_calories_per_day});
+	async patchProfile(expected_calories_per_day) {
+		await axios.patch(`http://${settings.backend_domain}:${settings.backend_port}/api/users/self/profile`, {expected_calories_per_day});
 	},
 	async changePassword(data) {
 		await axios.put(`http://${settings.backend_domain}:${settings.backend_port}/api/users/self/password_change`, data);

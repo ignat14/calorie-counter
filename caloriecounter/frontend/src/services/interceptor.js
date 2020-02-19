@@ -19,7 +19,6 @@ axios.interceptors.response.use((response) => {
 	if (error.response.status === 401 || error.response.status === 403) {
 		localStorage.removeItem("cc_token");
 		router.push('/login');
-			
 	}
 	else {
 		return Promise.reject(error);
